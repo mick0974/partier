@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+//import './bar/bar_widget.dart';
+
 /// Home page of the application.
 /// This widget will contain an upper bar and an istance of page widget. In
 /// particular, through a button will get access to the user's options.
@@ -39,6 +41,22 @@ class _HomePageState extends State<HomePage> {
 				actions: <Widget>[userButton],
 			),
 			body: const Center(child: Text('This is the home page'),),
+			bottomNavigationBar: BottomAppBar(
+				child: Row(
+					children: <Widget>[
+						TextButton.icon(
+							onPressed: () {},
+							label: const Text('Test 1'),
+							icon: const Icon(Icons.add),
+						),
+						TextButton.icon(
+							onPressed: () {},
+							label: const Text('Test 2'),
+							icon: const Icon(Icons.add),
+						),
+					],
+				),
+			),
 		);
 	}
 }
