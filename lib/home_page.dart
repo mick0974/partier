@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:partier/page/apiTest_page/apiTest.dart';
 
 import 'page/discover_page/discover_page.dart';
 
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> {
 			tooltip: 'User page',
 			onPressed: () {
 				ScaffoldMessenger.of(context).showSnackBar(
-					const SnackBar(content: Text('Not yet implemented.')));
+						const SnackBar(content: Text('Not yet implemented.')));
 			},
 		);
 
@@ -55,10 +56,19 @@ class _HomePageState extends State<HomePage> {
 			onPressed: Show_date_picker,
 		);
 
+		Widget apiButton = IconButton(
+			icon: const Icon(Icons.text_snippet_rounded),
+			iconSize: 35,
+			tooltip: 'API test page',
+			onPressed: () {
+				Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ApiTestPage()));
+			},
+		);
+
 		return Scaffold(
 			appBar: AppBar(
 				title: Text(widget.title),
-				actions: <Widget>[calendar,userButton],
+				actions: <Widget>[calendar,userButton, apiButton],
 			),
 			body: explore
 				? const Center(child: Text('This is the home page for Explore'),) // qui ci va il richiamo alla classe principale dewl file discover_page.dart
