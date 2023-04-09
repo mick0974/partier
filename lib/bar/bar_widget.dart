@@ -20,10 +20,32 @@ class BarWidget extends StatefulWidget {
 }
 
 /// Defines BarWidget's layout and behaviour.
+/// STILL HAS TO BE ANIMATED -> AnimatedAlign? AnimatedContainer?
 class _BarWidgetState extends State<BarWidget> {
 
 	@override
 	Widget build(BuildContext context) {
+		return FilledButton.icon(
+			onPressed: () {ScaffoldMessenger.of(context).showSnackBar(
+					const SnackBar(content: Text('Switch to explore mode.'),
+					duration: Duration(milliseconds: 1000)));
+					setState(() {
+						explore = true;
+						create = false;
+					});
+				},
+			label: const Text('Explore'),
+			icon: const Icon(Icons.map_outlined),
+			style: explore
+					? ElevatedButton.styleFrom(
+						// minimumSize: const Size.fromHeight(1),
+						padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide/6.5),
+			)
+					: ElevatedButton.styleFrom(
+						primary: Colors.black26,
+						padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide/6.5),
+					),
+		);
 		/*
 	    return GestureDetector(
 	      onTap: () {
