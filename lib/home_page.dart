@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:partier/page/apiTest_page/apiTest.dart';
+import 'package:partier/page/login_page/login_page.dart';
 
 import 'page/discover_page/discover_page.dart';
 
@@ -65,10 +68,20 @@ class _HomePageState extends State<HomePage> {
 			},
 		);
 
+		Widget logoutButton = IconButton(
+			icon: const Icon(Icons.logout),
+			iconSize: 35,
+			tooltip: 'Logout',
+			onPressed: () async{
+				await GoogleSignIn().signOut();
+				FirebaseAuth.instance.signOut();
+			},
+		);
+
 		return Scaffold(
 			appBar: AppBar(
 				title: Text(widget.title),
-				actions: <Widget>[calendar,userButton, apiButton],
+				actions: <Widget>[calendar,userButton, apiButton, logoutButton],
 			),
 			body: explore
 				? const Center(child: Text('This is the home page for Explore'),) // qui ci va il richiamo alla classe principale dewl file discover_page.dart

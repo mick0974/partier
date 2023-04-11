@@ -17,8 +17,21 @@ class _ApiTestPage extends State<ApiTestPage> {
 
   @override
   Widget build(BuildContext context) {
-    api.printTest();
-
-    return Scaffold();
+    return Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'Enter your username',
+              ),
+            ),
+          ),
+        ],
+      )
+    );
   }
 }
