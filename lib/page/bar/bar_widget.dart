@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+
+
 /// Animated widget for bottom bar.
 /// This defines a widget having an icon and a label which, when pressed,
 /// resizes. In particular, it can reidirect to either a discover's widget or a
@@ -25,17 +27,30 @@ class _BarWidgetState extends State<BarWidget> {
 
 	@override
 	Widget build(BuildContext context) {
+		// Setting button label
+		String label;
+		widget.selected()=='E'	? label='Explore' 
+								: label='Create';
+
+		// Setting button icon
+		Widget icon;
+		widget.selected()=='E'	? icon=Icon(Icons.map_outlined)
+								: icon=Icon(Icons.event_available_rounded);
+
 		return FilledButton.icon(
-			onPressed: () {ScaffoldMessenger.of(context).showSnackBar(
-					const SnackBar(content: Text('Switch to explore mode.'),
-					duration: Duration(milliseconds: 1000)));
-					setState(() {
-						explore = true;
-						create = false;
-					});
-				},
-			label: const Text('Explore'),
-			icon: const Icon(Icons.map_outlined),
+			onPressed: () {
+				ScaffoldMessenger.of(context).showSnackBar(
+					const SnackBar(content: Text('Switch to explore mode.'
+				),
+				duration: Duration(milliseconds: 1000)));
+				setState(() {
+					explore = true;
+					create = false;
+				});
+			},
+			label: Text(label),
+			icon: icon,
+			/*
 			style: explore
 					? ElevatedButton.styleFrom(
 						// minimumSize: const Size.fromHeight(1),
@@ -45,6 +60,7 @@ class _BarWidgetState extends State<BarWidget> {
 						primary: Colors.black26,
 						padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide/6.5),
 					),
+			*/ 
 		);
 		/*
 	    return GestureDetector(
