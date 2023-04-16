@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fancy_containers/fancy_containers.dart';
+import '../event_widget/container/my_fancy_container.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 
@@ -91,42 +91,36 @@ class _DiscoverPage extends State<DiscoverPage> {
       body: CustomScrollView(
         center: centerKey,
         slivers: <Widget>[
-          SliverAppBar(),
-          SliverToBoxAdapter(
-            child: Container(
-              color: Color(0xff5c63f1),
-              height: 20,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(20.0),
-                        topRight: const Radius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+          SliverAppBar(
+            flexibleSpace: SafeArea(
+              child: FilledButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.update),
+                label: Text('Tap to reload'),
+              )
             ),
           ),
+
           SliverList(
             key: centerKey,
             delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                return const FancyContainer(
-                  title: 'Hello World!',
-                  color1: Colors.lightGreenAccent,
-                  color2: Colors.lightBlue,
-                  subtitle: 'This is a new event',
+                return Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height*0.25,
+                  child: MyFancyContainer(
+                        title: 'Festival di SanRemo!',
+                        color1: Colors.lightGreenAccent,
+                        color2: Colors.lightBlue,
+                        subtitle: "Partecipa all'evento della musica Italiana",
+                        )
                 );
               },
               childCount: bottom.length,
             ),
           ),
+          // SliverPadding(padding: EdgeInsets.all(5))
         ],
       ),
     );
