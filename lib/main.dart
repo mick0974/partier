@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' ;
 
 import 'home_page.dart';
 
@@ -19,6 +20,11 @@ class Partier extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
+		// Comando per impedire alla visualizzazione dell'app di
+		// ruotare quando si ruota lo schermo
+		SystemChrome.setPreferredOrientations([
+			DeviceOrientation.portraitUp,
+		]);
 		return MaterialApp(
 			title: 'Partier',
 			theme: ThemeData(
