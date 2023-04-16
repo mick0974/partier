@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  carousel_slider:
+    dependency: "direct main"
+    description:
+      name: carousel_slider
+      sha256: "9c695cc963bf1d04a47bd6021f68befce8970bcd61d24938e1fb0918cf5d9c42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
   characters:
     dependency: transitive
     description:
@@ -137,6 +145,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  fancy_containers:
+    dependency: "direct main"
+    description:
+      name: fancy_containers
+      sha256: "5b9d8f14afb547849fc971be48c75d72309fe90c7d19ae499c53aeb262a3b148"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -368,3 +384,4 @@ packages:
 sdks:
   dart: ">=2.19.4 <3.0.0"
   flutter: ">=3.3.0"
+  flutter: ">=1.17.0"

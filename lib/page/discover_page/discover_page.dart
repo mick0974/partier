@@ -1,72 +1,134 @@
-// import 'package:flutter/material.dart';
-//
-//
-// /// Home page of the application.
-// /// This widget will contain an upper bar and an istance of page widget. In
-// /// particular, through a button will get access to the user's options.
-// class DiscoverPage extends StatelessWidget {
-//   final String title = 'Partier';
-//
-//   const HomePage({super.key});
-//
-//   @override
-//   State<HomePage> createState() => _HomePageState();
-// }
-//
-// /// Defines the HomePage's layout and behaviour.
-// /// Every HomePage be Scaffold and will have:
-// /// * An AppBar containing title and IconButton (this last reidirecting to a
-// /// UserAccount widget);
-// /// * An instance of Page widget managing whether a DiscoverPage widget or a
-// /// UserPage widget should be displayed.
-// class _HomePageState extends State<HomePage> {
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     // User-page button
-//     Widget userButton = IconButton(
-//       icon: const Icon(Icons.account_circle),
-//       iconSize: 35,
-//       tooltip: 'User page',
-//       onPressed: () {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//             const SnackBar(content: Text('Not yet implemented.')));
-//       },
-//     );
-//
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(widget.title),
-//         actions: <Widget>[userButton],
-//       ),
-//       body: const Center(child: Text('This is the home page'),),
-//       bottomNavigationBar: BottomAppBar(
-//         child: Row(
-//           children: <Widget>[
-//             FilledButton.icon(
-//               onPressed: () {ScaffoldMessenger.of(context).showSnackBar(
-//                   const SnackBar(content: Text('Switch to explore mode.')));
-//               },
-//               label: const Text('Explore'),
-//               icon: const Icon(Icons.map_outlined),
-//               style: TextButton.styleFrom(
-//                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide/6.5),
-//               ),
-//             ),
-//             FilledButton.icon(
-//               onPressed: () {ScaffoldMessenger.of(context).showSnackBar(
-//                   const SnackBar(content: Text('Switch to host mode.')));
-//               },
-//               label: const Text('Create'),
-//               icon: const Icon(Icons.event_available_rounded),
-//               style: ElevatedButton.styleFrom(
-//                 primary: Colors.black26,
-//                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide/6.5),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+import 'package:fancy_containers/fancy_containers.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
+
+/// Home page of the application.
+/// This widget will contain an upper bar and an istance of page widget. In
+/// particular, through a button will get access to the user's options.
+class DiscoverPage extends StatefulWidget {
+  final String title = 'Partier';
+
+  const DiscoverPage({super.key});
+
+  @override
+  State<DiscoverPage> createState() => _DiscoverPage();
+}
+
+
+class _DiscoverPage extends State<DiscoverPage> {
+
+  List<int> top = <int>[];
+  List<int> bottom = <int>[0,1];
+
+  Widget banner = CarouselSlider(
+    options: CarouselOptions(
+        aspectRatio: 16/9,
+        enableInfiniteScroll: true,
+        autoPlay: true,
+        autoPlayInterval: Duration(seconds: 2),
+        autoPlayAnimationDuration: Duration(milliseconds: 800),
+        autoPlayCurve: Curves.fastOutSlowIn,
+        enlargeCenterPage: true,
+        enlargeFactor: 0.3,
+        scrollDirection: Axis.horizontal,
+    ),
+    items: ['assets/images/muse.png', 'assets/images/pinguini.jpg',
+      'assets/images/TOMORROWLAND.jpg'].map((i) {
+      return Builder(
+        builder: (BuildContext context) {
+          return Container(
+              // width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              decoration: BoxDecoration(
+                  color: Colors.white24
+              ),
+              child: Image.asset('$i')
+          );
+        },
+      );
+    }).toList(),
+  );
+
+
+  @override
+  Widget build(BuildContext context) {
+    const Key centerKey = ValueKey<String>('bottom-sliver-list');
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: const Text('Events'),
+      //   centerTitle: true,
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.add),
+      //     onPressed: () {
+      //       setState(() {
+      //         bottom.add(bottom.length);
+      //       });
+      //     },
+      //   ),
+      //   actions: <Widget>[
+      //     IconButton(
+      //       icon: Icon(
+      //         Icons.remove,
+      //         color: Colors.white,
+      //       ),
+      //       onPressed: () {
+      //         setState(() {
+      //           bottom.remove(bottom.length - 1);
+      //         });
+      //         // do something
+      //       },
+      //     )
+      //   ],
+      // ),
+      appBar: AppBar(
+        backgroundColor: Colors.white24,
+        toolbarHeight: 180,
+        flexibleSpace: SafeArea(
+          child: banner
+        ),
+      ),
+      body: CustomScrollView(
+        center: centerKey,
+        slivers: <Widget>[
+          SliverAppBar(),
+          SliverToBoxAdapter(
+            child: Container(
+              color: Color(0xff5c63f1),
+              height: 20,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(20.0),
+                        topRight: const Radius.circular(20.0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverList(
+            key: centerKey,
+            delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                return const FancyContainer(
+                  title: 'Hello World!',
+                  color1: Colors.lightGreenAccent,
+                  color2: Colors.lightBlue,
+                  subtitle: 'This is a new event',
+                );
+              },
+              childCount: bottom.length,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
