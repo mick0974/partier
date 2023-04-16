@@ -13,6 +13,7 @@ class ApiTestPage extends StatefulWidget {
 }
 
 class _ApiTestPage extends State<ApiTestPage> {
+  final textController = TextEditingController();
   Api api = Api();
 
   @override
@@ -24,9 +25,10 @@ class _ApiTestPage extends State<ApiTestPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child: TextFormField(
+              controller: textController,
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
-                labelText: 'Enter your username',
+                labelText: 'Nome evento',
               ),
             ),
           ),
