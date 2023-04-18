@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:partier/service/login.dart';
 
 import '../../service/api.dart';
 
@@ -50,6 +54,14 @@ class _ApiTestPage extends State<ApiTestPage> {
             },
             child: Text("Test maps"),
           ),
+          ),
+          Center (
+            child: ElevatedButton(
+              onPressed: () {
+                SignOut();
+              },
+              child: Text("Sign out"),
+            ),
           ),
         ],
       )
