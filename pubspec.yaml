@@ -47,7 +47,11 @@ dependencies:
   url_launcher: ^6.1.10
   map_launcher: ^2.5.0+1
   geocoding: ^2.1.0
+<<<<<<< Updated upstream
   go_router: ^6.5.7
+=======
+  event: ^2.1.2
+>>>>>>> Stashed changes
 
 
 dev_dependencies:
