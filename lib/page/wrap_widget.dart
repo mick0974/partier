@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'discover_page/discover_page.dart';
-import 'user_page/user_page.dart';
 
 //import './bar/bar_widget.dart';
 
@@ -23,8 +22,15 @@ class WrapWidget extends StatefulWidget {
 /// UserPage widget should be displayed.
 class _WrapWidgetState extends State<WrapWidget> {
 	bool explore = true;
-	bool events = false;
+	bool create = false;
 	bool central_b = false;
+
+	/// According to button's selcted boolean value changes the displayed page.
+	void switchPage() {
+		setState(() {
+			//...	
+		});
+	}
 	
 	@override
 	Widget build(BuildContext context) {
@@ -32,9 +38,9 @@ class _WrapWidgetState extends State<WrapWidget> {
 		return Scaffold(
 			body: explore
 				? DiscoverPage() // qui ci va il richiamo alla classe principale dewl file discover_page.dart
-				: events
-				? UserPage()
-				: const Center(child: Text('This is the home page for Create'),), // qui il link per la create_page.dart
+				: create
+				? const Center(child: Text('This is the home page for Create'),) // qui il link per la create_page.dart
+				: const Center(child: Text('This is the home page for My Events'),), // qui il link per la my_events_page.dart
 			bottomNavigationBar: BottomAppBar(
 				shape: const CircularNotchedRectangle(),
 				child: Row(
@@ -44,7 +50,7 @@ class _WrapWidgetState extends State<WrapWidget> {
 							child:	FilledButton.icon(
 											onPressed: () {setState(() {
 														explore = true;
-														events = false;
+														create = false;
 														central_b = false;
 													});
 												},
@@ -67,16 +73,16 @@ class _WrapWidgetState extends State<WrapWidget> {
 						Expanded(
 							child: FilledButton.icon(
 										onPressed: () => {setState(() {
-													events = true;
+													create = true;
 													explore = false;
 													central_b = false;
 												})
 											},
-										label: const Text('Events'),
-										icon: events
+										label: const Text('Create'),
+										icon: create
 												? const Icon(Icons.event_available)
 												: const Icon(Icons.event_available_outlined),
-										style: events
+										style: create
 												? ElevatedButton.styleFrom(
 											// padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.shortestSide/6.3),
 										)
@@ -92,7 +98,7 @@ class _WrapWidgetState extends State<WrapWidget> {
 			floatingActionButton: FloatingActionButton(
 				onPressed: () => {setState(() {
 						explore = false;
-						events = false;
+						create = false;
 						central_b = true;
 					})},
 				backgroundColor: central_b
