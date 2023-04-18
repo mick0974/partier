@@ -1,16 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:partier/page/login_page/login_page.dart';
-import 'firebase_options.dart';
 import 'package:flutter/services.dart' ;
 
 import 'home_page.dart';
 
-Future<void> main() async {
-	WidgetsFlutterBinding.ensureInitialized();
-	await Firebase.initializeApp();
-
+void main() {
 	runApp(const Partier());
 }
 
@@ -37,30 +30,7 @@ class Partier extends StatelessWidget {
 			theme: ThemeData(
 				primarySwatch: Colors.teal,
 			),
-			home: StreamBuilder<User?>(
-				stream: FirebaseAuth.instance.authStateChanges(),
-				builder: (BuildContext context, AsyncSnapshot snapshot){
-					if(snapshot.hasError)
-					{
-						return Text(snapshot.error.toString());
-					}
-
-					if(snapshot.connectionState == ConnectionState.active)
-						{
-							print(snapshot.data);
-							if(snapshot.data == null)
-								{
-									return LoginPage();
-								}
-							else
-								{
-									return HomePage();
-								}
-						}
-
-					return Text("Error");
-				},
-			)
+			home: const HomePage(),
 		);
 	}
 }

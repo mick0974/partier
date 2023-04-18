@@ -1,8 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:partier/page/apiTest_page/apiTest.dart';
-import 'package:partier/page/login_page/login_page.dart';
 
 import 'page/wrap_widget.dart';
 import 'page/discover_page/discover_page.dart';
@@ -48,7 +44,7 @@ class _HomePageState extends State<HomePage> {
 			tooltip: 'User page',
 			onPressed: () {
 				ScaffoldMessenger.of(context).showSnackBar(
-						const SnackBar(content: Text('Not yet implemented.')));
+					const SnackBar(content: Text('Not yet implemented.')));
 			},
 		);
 
@@ -60,29 +56,10 @@ class _HomePageState extends State<HomePage> {
 			onPressed: Show_date_picker,
 		);
 
-		Widget apiButton = IconButton(
-			icon: const Icon(Icons.text_snippet_rounded),
-			iconSize: 35,
-			tooltip: 'API test page',
-			onPressed: () {
-				Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ApiTestPage()));
-			},
-		);
-
-		Widget logoutButton = IconButton(
-			icon: const Icon(Icons.logout),
-			iconSize: 35,
-			tooltip: 'Logout',
-			onPressed: () async{
-				await GoogleSignIn().signOut();
-				FirebaseAuth.instance.signOut();
-			},
-		);
-
 		return Scaffold(
 			appBar: AppBar(
 				title: Text(widget.title),
-				actions: <Widget>[calendar,userButton, apiButton, logoutButton],
+				actions: <Widget>[calendar,userButton],
 			),
 			body: WrapWidget(),
 		);
