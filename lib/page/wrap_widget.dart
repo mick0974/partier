@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'apiTest_page/apiTest.dart';
 import 'discover_page/discover_page.dart';
 import 'user_page/user_page.dart';
@@ -95,7 +96,7 @@ class _WrapWidgetState extends State<WrapWidget> {
 						explore = false;
 						events = false;
 						central_b = true;
-						Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ApiTestPage()));
+						context.go('/create_event');
 					})},
 				backgroundColor: central_b
 					? Colors.teal
