@@ -1,50 +1,61 @@
-import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
+import 'package:partier/page/apiTest_page/apiTest.dart';
+import 'package:partier/routing/route_utils.dart';
+
+import '../home_page.dart';
+import '../page/discover_page/discover_page.dart';
+import '../services/app_service.dart';
 
 class AppRouter {
-  // 1
-  final LoginState loginState;
-  AppRouter(this.loginState);
+  late final AppService appService;
+  GoRouter get router => _goRouter;
 
-  // 2
-  late final router = GoRouter(
-    // 3
-    refreshListenable: loginState,
-    // 4
-    debugLogDiagnostics: true,
-    // 5
-    urlPathStrategy: UrlPathStrategy.path,
+  AppRouter(this.appService);
 
-    // 6
-    routes: [
+  late final GoRouter _goRouter = GoRouter(
+    refreshListenable: appService,
+    initialLocation: VIEW.home.toPath,
+    routes: <GoRoute>[
       GoRoute(
-        name: rootRouteName,
-        path: '/',
-        redirect: (state) =>
-        // TODO: Change to Home Route
-        state.namedLocation(loginRouteName),
+        path: VIEW.home.toPath,
+        name: VIEW.home.toName,
+        builder: (context, state) => const HomePage(),
       ),
       GoRoute(
-        name: loginRouteName,
-        path: '/login',
-        pageBuilder: (context, state) => MaterialPage<void>(
-          key: state.pageKey,
-          child: const Login(),
-        ),
+        path: VIEW.events.toPath,
+        name: VIEW.events.toName,
+        builder: (context, state) => const DiscoverPage(),
       ),
       GoRoute(
-        name: createAccountRouteName,
-        path: '/create-account',
-        pageBuilder: (context, state) => MaterialPage<void>(
-          key: state.pageKey,
-          child: const CreateAccount(),
-        ),
+        path: VIEW.createEvent.toPath,
+        name: VIEW.createEvent.toName,
+        builder: (context, state) => const ApiTestPage(),
       ),
     ],
-    // TODO: Add Error Handler
-    // TODO Add Redirect
+    //errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
+    redirect: (context, state) {
+      final createEventLocation = state.namedLocation(VIEW.createEvent.toName);
+      final homeLocation = state.namedLocation(VIEW.home.toName);
+
+      final isLogedIn = appService.loginState;
+      final isInitialized = appService.initialized;
+      final isOnboarded = appService.onboarding;
+
+      final isGoingToCreateEvent = state.subloc == createEventLocation;
+
+      print("--------------------------");
+      print(state.location);
+      print(state.subloc);
+      print(createEventLocation);
+
+      // If not Initialized and not going to Initialized redirect to Splash
+      if (!isGoingToCreateEvent) {
+        return createEventLocation;
+      } else {
+      // Else Don't do anything
+        return null;
+      }
+    },
   );
-
-
-
 }

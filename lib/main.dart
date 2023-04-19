@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,11 @@ import 'package:flutter/services.dart' ;
 import 'package:go_router/go_router.dart';
 import 'package:partier/page/apiTest_page/apiTest.dart';
 import 'package:partier/page/discover_page/discover_page.dart';
+import 'package:partier/routing/app_router.dart';
+import 'package:partier/services/app_service.dart';
+import 'package:partier/services/auth_service.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 import 'home_page.dart';
@@ -14,54 +21,43 @@ Future<void> main() async {
 	await Firebase.initializeApp(
 		options: DefaultFirebaseOptions.currentPlatform,
 	);
-
-	runApp(Partier());
+	final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+	runApp(Partier(sharedPreferences: sharedPreferences));
 }
 
-/// Generates an instance of the applicaztion having HomePage as home page
-/*
-* To Be Done:
-* - Remove degub band;
-* - Make adaptive to dark theme;
-* - Properly setup theme;
-* - Set adaptive theme for Android;
-*/
-class Partier extends StatelessWidget {
-	Partier({super.key});
+class Partier extends StatefulWidget {
+	final SharedPreferences sharedPreferences;
+	const Partier({
+		Key? key,
+		required this.sharedPreferences,
+	}) : super(key: key);
 
-	final GoRouter _router = GoRouter(
-		//errorBuilder: (context, state) => ErrorScreen(error:state.error),
-		routes: <GoRoute>[
-			GoRoute(
-				routes: <GoRoute>[
-					GoRoute(
-						path: 'home',
-						builder: (BuildContext context, GoRouterState state) =>
-						const HomePage(),
-					),
-					GoRoute(
-						path: 'events',
-						builder: (BuildContext context, GoRouterState state) =>
-						const DiscoverPage(),
-					),
-					GoRoute(
-						path: 'create_event',
-						builder: (BuildContext context, GoRouterState state) =>
-						const ApiTestPage(),
-					),
-					GoRoute(
-						path: 'events/:eventId',
-						builder: (BuildContext context, GoRouterState state) =>
-						const ApiTestPage(),
-					),
-				],
-				path: '/',
-				builder: (BuildContext context, GoRouterState state) =>
-				const HomePage(),
-			),
-		],
+	@override
+	_Partier createState() => _Partier();
+}
 
-	);
+class _Partier extends State<Partier> {
+	late AppService appService;
+	late AuthService authService;
+	late StreamSubscription<bool> authSubscription;
+
+	@override
+	void initState() {
+		appService = AppService(widget.sharedPreferences);
+		authService = AuthService();
+		authSubscription = authService.onAuthStateChange.listen(onAuthStateChange);
+		super.initState();
+	}
+
+	void onAuthStateChange(bool login) {
+		appService.loginState = login;
+	}
+
+	@override
+	void dispose() {
+		authSubscription.cancel();
+		super.dispose();
+	}
 
 	@override
 	Widget build(BuildContext context) {
@@ -70,14 +66,25 @@ class Partier extends StatelessWidget {
 		SystemChrome.setPreferredOrientations([
 			DeviceOrientation.portraitUp,
 		]);
-		return MaterialApp.router(
-			title: 'Partier',
-			theme: ThemeData(
-				primarySwatch: Colors.teal,
+		return MultiProvider(
+			providers: [
+				ChangeNotifierProvider<AppService>(create: (_) => appService),
+				Provider<AppRouter>(create: (_) => AppRouter(appService)),
+				Provider<AuthService>(create: (_) => authService),
+			],
+			child: Builder(
+				builder: (context) {
+					final GoRouter goRouter = Provider.of<AppRouter>(context, listen: false).router;
+					return MaterialApp.router(
+						title: 'Partier',
+						theme: ThemeData(
+							primarySwatch: Colors.teal,
+						),
+						routeInformationParser: goRouter.routeInformationParser,
+						routerDelegate: goRouter.routerDelegate,
+					);
+				},
 			),
-			routerDelegate: _router.routerDelegate,
-			routeInformationParser: _router.routeInformationParser,
-			routeInformationProvider: _router.routeInformationProvider,
 		);
 	}
 }

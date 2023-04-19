@@ -5,8 +5,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:partier/service/login.dart';
+import 'package:provider/provider.dart';
 
 import '../../service/api.dart';
+import '../../services/auth_service.dart';
 
 class ApiTestPage extends StatefulWidget {
   final String title = 'Partier';
@@ -33,6 +35,7 @@ class _ApiTestPage extends State<ApiTestPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

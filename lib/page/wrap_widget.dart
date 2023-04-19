@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../routing/route_utils.dart';
 import 'apiTest_page/apiTest.dart';
 import 'discover_page/discover_page.dart';
 import 'user_page/user_page.dart';
@@ -96,7 +97,7 @@ class _WrapWidgetState extends State<WrapWidget> {
 						explore = false;
 						events = false;
 						central_b = true;
-						context.go('/create_event');
+						GoRouter.of(context).goNamed(VIEW.createEvent.toName);
 					})},
 				backgroundColor: central_b
 					? Colors.teal

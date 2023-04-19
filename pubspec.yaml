@@ -48,6 +48,8 @@ dependencies:
   map_launcher: ^2.5.0+1
   geocoding: ^2.1.0
   go_router: ^6.5.7
+  provider: ^6.0.5
+  shared_preferences: ^2.1.0
 
 
 dev_dependencies:
