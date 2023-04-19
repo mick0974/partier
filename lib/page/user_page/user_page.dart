@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 import 'package:event/event.dart';
@@ -7,9 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 /// Page displaying the summary of the events to which a user is subscribed as
 /// both host and guest.
 class UserPage extends StatefulWidget {
-	Map events = LinkedHashMap<DateTime, List<Event>>({
-		equals: isSameDay, hashCode: getHashCode,
-	});
+	Map events = LinkedHashMap<DateTime, List<Event<EventArgs>>>();
 	
 	UserPage({super.key});
 
@@ -62,7 +62,7 @@ class _UserPageState extends State<UserPage> {
 						_focusedDay = focusedDay;
 					},
 					eventLoader: (day) {
-						return _getEventsForDay(day);
+						return _getEventsForDay(widget, day);
 					},
 
 				),
