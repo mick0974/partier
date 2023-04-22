@@ -15,7 +15,7 @@ class BarWidget extends StatefulWidget {
 	bool get selected => _selected;
 	set selected(bool b) => _selected = b;
 
-	const BarWidget({this._type});
+	const BarWidget({super.key});
 
 	@override
 	State<BarWidget> createState() => _BarWidgetState();
