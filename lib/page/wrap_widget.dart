@@ -96,7 +96,7 @@ class _WrapWidgetState extends State<WrapWidget> {
 						explore = false;
 						events = false;
 						central_b = true;
-						context.go('/create_event');
+						context.go('/create-event');
 					})},
 				backgroundColor: central_b
 					? Colors.teal

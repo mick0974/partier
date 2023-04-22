@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' ;
 import 'package:go_router/go_router.dart';
 import 'package:partier/page/apiTest_page/apiTest.dart';
 import 'package:partier/page/discover_page/discover_page.dart';
+import 'package:partier/routing/app_router.dart';
 
 import 'firebase_options.dart';
 import 'home_page.dart';
@@ -29,39 +29,7 @@ Future<void> main() async {
 class Partier extends StatelessWidget {
 	Partier({super.key});
 
-	final GoRouter _router = GoRouter(
-		//errorBuilder: (context, state) => ErrorScreen(error:state.error),
-		routes: <GoRoute>[
-			GoRoute(
-				routes: <GoRoute>[
-					GoRoute(
-						path: 'home',
-						builder: (BuildContext context, GoRouterState state) =>
-						const HomePage(),
-					),
-					GoRoute(
-						path: 'events',
-						builder: (BuildContext context, GoRouterState state) =>
-						const DiscoverPage(),
-					),
-					GoRoute(
-						path: 'create_event',
-						builder: (BuildContext context, GoRouterState state) =>
-						const ApiTestPage(),
-					),
-					GoRoute(
-						path: 'events/:eventId',
-						builder: (BuildContext context, GoRouterState state) =>
-						const ApiTestPage(),
-					),
-				],
-				path: '/',
-				builder: (BuildContext context, GoRouterState state) =>
-				const HomePage(),
-			),
-		],
-
-	);
+	final GoRouter _router = AppRouter().router;
 
 	@override
 	Widget build(BuildContext context) {

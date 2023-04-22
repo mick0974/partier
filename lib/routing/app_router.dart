@@ -1,49 +1,51 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:partier/page/login_page/login_page.dart';
+import 'package:partier/services/auth_service.dart';
 
 import '../home_page.dart';
+import '../page/apiTest_page/apiTest.dart';
 import '../page/discover_page/discover_page.dart';
-import '../services/app_service.dart';
-import '../services/auth_service.dart';
+
 
 class AppRouter {
-  final AuthService authService;
-  final AppService? appService;
   GoRouter get router => _goRouter;
 
-  AppRouter(this.appService, this.authService);
-
-    // 6
-    routes: [
+  late final GoRouter _goRouter = GoRouter(
+    routes: <GoRoute>[
       GoRoute(
-        name: rootRouteName,
+        routes: <GoRoute>[
+          GoRoute(
+            path: "home",
+            name: "HOME",
+            builder: (context, state) => const HomePage(),
+          ),
+          GoRoute(
+            path: "events",
+            name: "EVENTS",
+            builder: (context, state) => const DiscoverPage(),
+          ),
+          GoRoute(
+            path: "create-event",
+            name: "CREATE-EVENT",
+            builder: (context, state) => const ApiTestPage(),
+            redirect: (context, state) => _redirect(context),
+          ),
+          GoRoute(
+            path: "login",
+            name: "LOGIN",
+            builder: (context, state) => const LoginPage(),
+          ),
+        ],
         path: '/',
-        redirect: (state) =>
-        // TODO: Change to Home Route
-        state.namedLocation(loginRouteName),
-      ),
-      GoRoute(
-        name: loginRouteName,
-        path: '/login',
-        pageBuilder: (context, state) => MaterialPage<void>(
-          key: state.pageKey,
-          child: const Login(),
-        ),
-      ),
-      GoRoute(
-        path: VIEW.createEvent.toPath,
-        name: VIEW.createEvent.toName,
-        builder: (context, state) => const ApiTestPage(),
-        redirect: (context, state) => _redirect(context),
-      ),
-    ],
-    //errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
+        builder: (context, GoRouterState state) =>
+        const HomePage(),
+      )
+    ]
   );
 
   String? _redirect(context) {
-      var isAuthenticated = authService.checkIfLogged();
-      print("LOLLO");
-      print(isAuthenticated);
+      var isAuthenticated = checkIfLoggedIn();
+
       if (isAuthenticated == null) {
         return '/login';
       } else {
