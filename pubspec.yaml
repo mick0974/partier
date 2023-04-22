@@ -48,6 +48,7 @@ dependencies:
   map_launcher: ^2.5.0+1
   geocoding: ^2.1.0
   go_router: ^6.5.7
+  flutter_native_splash: ^2.2.19
 
 
 dev_dependencies:
@@ -104,3 +105,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_native_splash:
+  image: assets/images/raccoon.png
+  color: "#ffffff"

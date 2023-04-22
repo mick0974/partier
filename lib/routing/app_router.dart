@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AppRouter {
-  // 1
-  final LoginState loginState;
-  AppRouter(this.loginState);
+import '../home_page.dart';
+import '../page/discover_page/discover_page.dart';
+import '../services/app_service.dart';
+import '../services/auth_service.dart';
 
-  // 2
-  late final router = GoRouter(
-    // 3
-    refreshListenable: loginState,
-    // 4
-    debugLogDiagnostics: true,
-    // 5
-    urlPathStrategy: UrlPathStrategy.path,
+class AppRouter {
+  final AuthService authService;
+  final AppService? appService;
+  GoRouter get router => _goRouter;
+
+  AppRouter(this.appService, this.authService);
 
     // 6
     routes: [
@@ -33,18 +31,25 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        name: createAccountRouteName,
-        path: '/create-account',
-        pageBuilder: (context, state) => MaterialPage<void>(
-          key: state.pageKey,
-          child: const CreateAccount(),
-        ),
+        path: VIEW.createEvent.toPath,
+        name: VIEW.createEvent.toName,
+        builder: (context, state) => const ApiTestPage(),
+        redirect: (context, state) => _redirect(context),
       ),
     ],
-    // TODO: Add Error Handler
-    // TODO Add Redirect
+    //errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
   );
 
+  String? _redirect(context) {
+      var isAuthenticated = authService.checkIfLogged();
+      print("LOLLO");
+      print(isAuthenticated);
+      if (isAuthenticated == null) {
+        return '/login';
+      } else {
+        return null; // return "null" to display the intended route without redirecting
+      }
+  }
 
 
 }

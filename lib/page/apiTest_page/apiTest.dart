@@ -58,7 +58,7 @@ class _ApiTestPage extends State<ApiTestPage> {
           Center (
             child: ElevatedButton(
               onPressed: () {
-                SignOut();
+                authService.signOut();
               },
               child: Text("Sign out"),
             ),
