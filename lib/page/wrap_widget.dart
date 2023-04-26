@@ -114,6 +114,7 @@ class _WrapWidgetState extends State<WrapWidget> {
 				shape: CircleBorder(),
 			),
 			floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+			resizeToAvoidBottomInset: false,	//Avoids resizing option
 		);
 	}
 }

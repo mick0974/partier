@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 
-
 /// Animated widget for bottom bar.
 /// This defines a widget having an icon and a label which, when pressed,
 /// resizes. In particular, it can reidirect to either a discover's widget or a
