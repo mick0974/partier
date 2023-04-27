@@ -2,12 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' ;
 import 'package:go_router/go_router.dart';
-import 'package:partier/page/apiTest_page/apiTest.dart';
-import 'package:partier/page/discover_page/discover_page.dart';
 import 'package:partier/routing/app_router.dart';
+import 'package:partier/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
-import 'home_page.dart';
+
 
 Future<void> main() async {
 	WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,8 @@ Future<void> main() async {
 class Partier extends StatelessWidget {
 	Partier({super.key});
 
-	final GoRouter _router = AppRouter().router;
+	final GoRouter _router = router;
+	final LoginInfo loginInfo = LoginInfo();
 
 	@override
 	Widget build(BuildContext context) {
@@ -38,14 +39,17 @@ class Partier extends StatelessWidget {
 		SystemChrome.setPreferredOrientations([
 			DeviceOrientation.portraitUp,
 		]);
-		return MaterialApp.router(
-			title: 'Partier',
-			theme: ThemeData(
-				primarySwatch: Colors.teal,
+		return ChangeNotifierProvider<LoginInfo>.value(
+			value: loginInfo,
+			child: MaterialApp.router(
+				title: 'Partier',
+				theme: ThemeData(
+					primarySwatch: Colors.teal,
+				),
+				routerDelegate: _router.routerDelegate,
+				routeInformationParser: _router.routeInformationParser,
+				routeInformationProvider: _router.routeInformationProvider,
 			),
-			routerDelegate: _router.routerDelegate,
-			routeInformationParser: _router.routeInformationParser,
-			routeInformationProvider: _router.routeInformationProvider,
 		);
 	}
 }

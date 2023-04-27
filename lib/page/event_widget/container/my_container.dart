@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:fancy_containers/src/utils/fancy_containers_typedef.dart';
 import 'package:flutter/material.dart';

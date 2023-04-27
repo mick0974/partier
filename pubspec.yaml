@@ -54,6 +54,10 @@ dependencies:
   event: ^2.1.2
 #>>>>>>> Stashed changes
   flutter_native_splash: ^2.2.19
+  go_router_builder: ^1.0.16
+  build_runner: ^2.3.3
+  build_verify: ^3.1.0
+  provider: ^6.0.5
 
 
 dev_dependencies:

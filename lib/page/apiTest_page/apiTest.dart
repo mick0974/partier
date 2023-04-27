@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:provider/provider.dart';
 
 import '../../services/api.dart';
 import '../../services/auth_service.dart';
@@ -58,7 +59,7 @@ class _ApiTestPage extends State<ApiTestPage> {
           Center (
             child: ElevatedButton(
               onPressed: () {
-                signOut();
+                context.read<LoginInfo>().signOut();
               },
               child: Text("Sign out"),
             ),

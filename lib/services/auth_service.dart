@@ -1,30 +1,43 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-void signInWithGoogle() async {
-  GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-  GoogleSignInAuthentication? googleSignInAuthentication = await googleUser?.authentication;
+class LoginInfo extends ChangeNotifier {
+  String? _userId;
+  String? get userId => _userId;
+  bool get loggedIn => checkIfLoggedIn();
 
-  AuthCredential authCredential = GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication?.accessToken,
-      idToken: googleSignInAuthentication?.idToken
-  );
+  void signInWithGoogle() async {
+    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    GoogleSignInAuthentication? googleSignInAuthentication = await googleUser?.authentication;
 
-  UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
+    AuthCredential authCredential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication?.accessToken,
+        idToken: googleSignInAuthentication?.idToken
+    );
 
-  print(userCredential.user?.displayName);
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
+
+    _userId = userCredential.user?.uid;
+    notifyListeners();
+  }
+
+  void signOut() async {
+    await GoogleSignIn().signOut();
+    FirebaseAuth.instance.signOut();
+
+    _userId = null;
+    notifyListeners();
+  }
+
+  bool checkIfLoggedIn() {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    _userId = user?.uid;
+
+    return _userId != null;
+  }
 }
 
-void signOut() async {
-  await GoogleSignIn().signOut();
-  FirebaseAuth.instance.signOut();
-}
-
-String? checkIfLoggedIn() {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  final User? user = auth.currentUser;
-  final uid = user?.uid;
-  return uid;
-}
 

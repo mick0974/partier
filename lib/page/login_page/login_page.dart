@@ -1,10 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
 import '../../services/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key, this.from}) : super(key: key);
+
+  final String? from;
 
   @override
   Widget build(BuildContext context){
@@ -12,7 +16,12 @@ class LoginPage extends StatelessWidget {
         body: Center(
           child: ElevatedButton(
             onPressed: () {
-              signInWithGoogle();
+              context.read<LoginInfo>().signInWithGoogle();
+
+              // if there's a deep link, go there
+              if (from != null) {
+                context.go(from!);
+              }
             },
             child: Text("Accedi con Google"),
           ),
