@@ -32,6 +32,12 @@ class _ApiTestPage extends State<ApiTestPage> {
     );
   }
 
+  Future<Location> geoc() async {
+    List<Location> locations = await locationFromAddress("Via Pellizzari 12, arzignano");
+    //print(locations[0]);
+    return locations[1];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,10 +64,12 @@ class _ApiTestPage extends State<ApiTestPage> {
           ),
           Center (
             child: ElevatedButton(
-              onPressed: () {
-                context.read<LoginInfo>().signOut();
+              onPressed: () async {
+                Location location = await geoc();
+
+                _launchMaps(location.latitude, location.longitude);
               },
-              child: Text("Sign out"),
+              child: Text("Geocoding"),
             ),
           ),
         ],
