@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:partier/routing/app_router.dart';
 import 'apiTest_page/apiTest.dart';
 import 'discover_page/discover_page.dart';
 import 'create_page/create_page.dart';
@@ -33,11 +34,14 @@ class _WrapWidgetState extends State<WrapWidget> {
 	Widget build(BuildContext context) {
 
 		return Scaffold(
+			/*
 			body: explore
 				? DiscoverPage() // qui ci va il richiamo alla classe principale dewl file discover_page.dart
 				: events
 				? UserPage()
 				: CreatePage(),
+
+			 */
 			bottomNavigationBar: BottomAppBar(
 				shape: const CircularNotchedRectangle(),
 				child: Row(
@@ -49,6 +53,7 @@ class _WrapWidgetState extends State<WrapWidget> {
 														explore = true;
 														events = false;
 														central_b = false;
+														DiscoveryRoute().go(context);
 													});
 												},
 											label: const Text('Explore'),
@@ -97,7 +102,7 @@ class _WrapWidgetState extends State<WrapWidget> {
 						explore = false;
 						events = false;
 						central_b = true;
-						//context.go('/create_event');
+						CreateEventRoute().go(context);
 					})},
 				backgroundColor: central_b
 					? Colors.teal
