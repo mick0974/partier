@@ -43,7 +43,7 @@ class BottomBarWidget extends StatelessWidget {
               ),
             ],
             selectedIndex: selectedIndex,
-            onDestinationSelected: (int index) {
+            onDestinationSelected: (int index) async {
               switch (index) {
                 case 0:
                   DiscoveryRoute().go(context);
@@ -52,7 +52,10 @@ class BottomBarWidget extends StatelessWidget {
                   CreateEventRoute().go(context);
                   break;
                 case 2:
-                  context.read<LoginInfo>().signOut();
+                  await context.read<LoginInfo>().signOut();
+
+                  if (!context.mounted) return;
+                  context.go("/");
                   break;
               }
             },

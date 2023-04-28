@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:partier/page/apiTest_page/apiTest.dart';
 import 'package:partier/page/bottomBar_widget/bottomBar_widget.dart';
 import 'package:partier/page/create_page/create_page.dart';
 import 'package:partier/page/login_page/login_page.dart';
@@ -13,6 +14,9 @@ part 'app_router.g.dart';
 
 @TypedShellRoute<BottomBarShellRoute>(
     routes: <TypedRoute<RouteData>>[
+      TypedGoRoute<HomeRoute>(
+        path: '/',
+      ),
       TypedGoRoute<DiscoveryRoute>(
         path: '/discovery',
       ),
@@ -33,9 +37,7 @@ class BottomBarShellRoute extends ShellRouteData {
 @immutable
 class HomeRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context,  GoRouterState state) {
-    return const HomePage();
-  }
+  String? redirect(BuildContext context, GoRouterState state) => DiscoveryRoute().location;
 }
 
 
@@ -51,7 +53,8 @@ class DiscoveryRoute extends GoRouteData {
 class CreateEventRoute extends GoRouteData {
   @override
   Widget build(BuildContext context,  GoRouterState state) {
-    return const CreatePage();
+    //return const CreatePage();
+    return const ApiTestPage();
   }
 }
 

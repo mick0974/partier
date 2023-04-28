@@ -15,11 +15,12 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
         body: Center(
           child: ElevatedButton(
-            onPressed: () {
-              context.read<LoginInfo>().signInWithGoogle();
+            onPressed: () async {
+              await context.read<LoginInfo>().signInWithGoogle();
 
               // if there's a deep link, go there
               if (from != null) {
+                if (!context.mounted) return;
                 context.go(from!);
               }
             },

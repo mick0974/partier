@@ -8,7 +8,8 @@ class LoginInfo extends ChangeNotifier {
   String? get userId => _userId;
   bool get loggedIn => checkIfLoggedIn();
 
-  void signInWithGoogle() async {
+
+  Future<void> signInWithGoogle() async {
     GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     GoogleSignInAuthentication? googleSignInAuthentication = await googleUser?.authentication;
 
@@ -23,9 +24,9 @@ class LoginInfo extends ChangeNotifier {
     notifyListeners();
   }
 
-  void signOut() async {
+  Future<void> signOut() async {
     await GoogleSignIn().signOut();
-    FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
 
     _userId = null;
     notifyListeners();
@@ -35,6 +36,9 @@ class LoginInfo extends ChangeNotifier {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     _userId = user?.uid;
+
+    print("User" );
+    print(_userId);
 
     return _userId != null;
   }
