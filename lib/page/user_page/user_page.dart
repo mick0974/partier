@@ -12,7 +12,7 @@ import '../event_widget/container/my_container.dart';
 /// Page displaying the summary of the events to which a user is subscribed as
 /// both host and guest.
 class UserPage extends StatefulWidget {
-	Map events = LinkedHashMap<DateTime, List<Event<EventArgs>>>();
+	Map events = <DateTime, List<Event<EventArgs>>>{};
 	
 	UserPage({super.key});
 
@@ -21,22 +21,10 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-	var _calendarFormat = CalendarFormat.month;
+	final _calendarFormat = CalendarFormat.month;
 	var _selectedDay = DateTime.now();
 	var _focusedDay = DateTime.now();
-
-	/*
-	void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-		if (!isSameDay(_selectedDay, selectedDay)) {
-		setState(() {
-		_focusedDay = focusedDay;
-		_selectedDay = selectedDay;
-		_selectedEvents = _getEventsForDay(selectedDay);
-		});
-		}
-	}
-	*/
-
+	var _selectedEvents;
 
 	Widget banner = CarouselSlider(
 		options: CarouselOptions(
@@ -87,6 +75,23 @@ class _UserPageState extends State<UserPage> {
 		return widget.events[day] ?? [];
 	}
 
+	/// Renders a list of events returning an appropriate widget.
+	void _buildList(List<Event<EventArgs>> events) {
+		//...
+	}
+
+	/// Returns the list of events for the specified day and renders it.
+	void _onDaySelected(UserPage widget, DateTime selectedDay, DateTime focusedDay) {
+		//_focusedDay = focusedDay;
+		_selectedDay = selectedDay;
+		_selectedEvents = _getEventsForDay(widget, selectedDay);
+
+		setState(() {
+			// Renders the list of selected events
+			_buildList(_selectedEvents);
+		});
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		return ListView(
@@ -101,10 +106,7 @@ class _UserPageState extends State<UserPage> {
 						return isSameDay(_selectedDay, day);
 					},
 					onDaySelected: (selectedDay, focusedDay) {
-						setState(() {
-							_selectedDay = selectedDay;
-							_focusedDay = focusedDay;
-						});
+						_onDaySelected(widget, selectedDay, focusedDay);
 					},
 					onPageChanged: (focusedDay) {
 						_focusedDay = focusedDay;
@@ -112,17 +114,6 @@ class _UserPageState extends State<UserPage> {
 					eventLoader: (day) {
 						return _getEventsForDay(widget, day);
 					},
-
-				),
-				Container(
-					height: 50,
-					color: Colors.amber[500],
-					child: const Center(child: Text('Host Events')),
-				),
-				Container(
-					height: 50,
-					color: Colors.amber[100],
-					child: const Center(child: Text('Guest Events')),
 				),
 				Container(
 					height: 15,
