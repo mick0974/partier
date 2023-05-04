@@ -62,6 +62,7 @@ class _HomePageState extends State<HomePage> {
 				actions: <Widget>[calendar,userButton],
 			),
 			body: WrapWidget(),
+			resizeToAvoidBottomInset: false,	//Avoids resizing option
 		);
 	}
 }
