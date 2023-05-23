@@ -38,49 +38,6 @@ class BottomBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final int _selectedIndex = getCurrentIndex(context);
 
-    /*
-    return Scaffold(
-      body: Row(
-        children: <Widget>[
-          NavigationRail(
-            destinations: const <NavigationRailDestination>[
-              NavigationRailDestination(
-                icon: Icon(Icons.home),
-                label: Text('Scopri'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.group),
-                label: Text('Crea'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.logout),
-                label: Text('Logout'),
-              ),
-            ],
-            selectedIndex: selectedIndex,
-            onDestinationSelected: (int index) async {
-              switch (index) {
-                case 0:
-                  DiscoveryRoute().go(context);
-                  break;
-                case 1:
-                  CreateEventRoute().go(context);
-                  break;
-                case 2:
-                  await context.read<LoginInfo>().signOut();
-
-                  if (!context.mounted) return;
-                  context.go("/");
-                  break;
-              }
-            },
-          ),
-          Expanded(child: child),
-        ],
-      ),
-    );
-     */
-
     return Scaffold(
       body: child,
       bottomNavigationBar: BottomNavigationBar(
