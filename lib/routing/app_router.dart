@@ -25,6 +25,7 @@ part 'app_router.g.dart';
       )
     ]
 )
+
 class BottomBarShellRoute extends ShellRouteData {
   const BottomBarShellRoute();
 
@@ -37,9 +38,9 @@ class BottomBarShellRoute extends ShellRouteData {
 @immutable
 class HomeRoute extends GoRouteData {
   @override
-  String? redirect(BuildContext context, GoRouterState state) => DiscoveryRoute().location;
+  String? redirect(BuildContext context, GoRouterState state)
+    => DiscoveryRoute().location;
 }
-
 
 @immutable
 class DiscoveryRoute extends GoRouteData {
