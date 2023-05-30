@@ -17,12 +17,14 @@ class BottomBarWidget extends StatelessWidget {
     int out;
     final String location = GoRouter.of(context).location;
 
-    if (location.startsWith('/discovery')) {
+    if(location.startsWith('/discovery')) {
       out = 1;
-    } else if (location.startsWith('/create-event')) {
+    } else if(location.startsWith('/create-event')) {
       out = 0;
-    } else {
+    } else if(location.startsWith('/user-event')) {
       out = 2;
+    } else {
+        out = 3;
     }
 
     return out;
@@ -30,13 +32,15 @@ class BottomBarWidget extends StatelessWidget {
 
   /// Defines behaviour of navigation bar upon tap.
   /// TO BE IMPLEMENTED
+  /*
   void _onItemTapped(int index) async {
     // ...
   }
+   */
 
   @override
   Widget build(BuildContext context) {
-    final int _selectedIndex = getCurrentIndex(context);
+    final int selectedIndex = getCurrentIndex(context);
 
     return Scaffold(
       body: child,
@@ -58,7 +62,7 @@ class BottomBarWidget extends StatelessWidget {
             tooltip: 'User page',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         onTap: (int index) async {
           switch (index) {
             case 0:
@@ -68,6 +72,9 @@ class BottomBarWidget extends StatelessWidget {
               CreateEventRoute().go(context);
               break;
             case 2:
+              UserEventRoute().go(context);
+              break;
+            case 3:
               await context.read<LoginInfo>().signOut();
 
               if (!context.mounted) return;

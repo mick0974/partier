@@ -51,6 +51,10 @@ RouteBase get $bottomBarShellRoute => ShellRouteData.$route(
           path: '/create-event',
           factory: $CreateEventRouteExtension._fromState,
         ),
+        GoRouteData.$route(
+          path: '/user-event',
+          factory: $UserEventRouteExtension._fromState,
+        ),
       ],
     );
 
@@ -94,6 +98,21 @@ extension $CreateEventRouteExtension on CreateEventRoute {
 
   String get location => GoRouteData.$location(
         '/create-event',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+extension $UserEventRouteExtension on UserEventRoute {
+  static UserEventRoute _fromState(GoRouterState state) => UserEventRoute();
+
+  String get location => GoRouteData.$location(
+        '/user-event',
       );
 
   void go(BuildContext context) => context.go(location);
