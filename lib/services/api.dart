@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Api {
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -7,17 +7,21 @@ class Api {
   Api();
 
   Future<void> addEvent() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
     final event = <String, dynamic>{
       "name_event": "Quando mia nonna non c'è",
       "description": "I topi ballano",
-      "owner": "",
+      "owner": auth.currentUser!.uid.toString(),
       "creation_date": DateTime.now(),
       "event_date": DateTime.now(),
-      "place": GeoPoint(1, 1),
+      "place": GeoPoint(2, 2),
       "public": true
     };
 
     await db.collection("events").add(event);
+    print(db.collection("events").add(event));
+
   }
 
   Future<void> printTest() async {

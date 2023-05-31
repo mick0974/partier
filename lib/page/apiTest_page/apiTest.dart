@@ -1,13 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:provider/provider.dart';
 
 import '../../services/api.dart';
-import '../../services/auth_service.dart';
 
 class ApiTestPage extends StatefulWidget {
   final String title = 'Partier';
@@ -34,8 +30,8 @@ class _ApiTestPage extends State<ApiTestPage> {
 
   Future<Location> geoc() async {
     List<Location> locations = await locationFromAddress("Via Pellizzari 12, arzignano");
-    //print(locations[0]);
-    return locations[1];
+    print(locations);
+    return locations[0];
   }
 
   @override
@@ -72,6 +68,16 @@ class _ApiTestPage extends State<ApiTestPage> {
               child: Text("Geocoding"),
             ),
           ),
+          Center (
+            child: ElevatedButton(
+              onPressed: () async {
+                Location location = await geoc();
+
+                Api().addEvent();
+              },
+              child: Text("Add event"),
+            ),
+          )
         ],
       )
     );
