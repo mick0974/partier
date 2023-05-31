@@ -6,62 +6,82 @@ import 'package:provider/provider.dart';
 import '../../routing/app_router.dart';
 
 class BottomBarWidget extends StatelessWidget {
+  // Class variables
   final Widget child;
+
   const BottomBarWidget({super.key, required this.child});
 
+  /// Returns current page index.
+  /// HAS TO BE FIXED
   int getCurrentIndex(BuildContext context) {
+    int out;
     final String location = GoRouter.of(context).location;
-    if (location.startsWith('/discovery')) {
-      return 1;
+
+    if(location.startsWith('/discovery')) {
+      out = 1;
+    } else if(location.startsWith('/create-event')) {
+      out = 0;
+    } else if(location.startsWith('/user-event')) {
+      out = 2;
+    } else {
+        out = 3;
     }
-    else if (location.startsWith('/create-event')) {
-      return 0;
-    }
-    return 2;
+
+    return out;
   }
+
+  /// Defines behaviour of navigation bar upon tap.
+  /// TO BE IMPLEMENTED
+  /*
+  void _onItemTapped(int index) async {
+    // ...
+  }
+   */
 
   @override
   Widget build(BuildContext context) {
     final int selectedIndex = getCurrentIndex(context);
 
     return Scaffold(
-      body: Row(
-        children: <Widget>[
-          NavigationRail(
-            destinations: const <NavigationRailDestination>[
-              NavigationRailDestination(
-                icon: Icon(Icons.home),
-                label: Text('Scopri'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.group),
-                label: Text('Crea'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.logout),
-                label: Text('Logout'),
-              ),
-            ],
-            selectedIndex: selectedIndex,
-            onDestinationSelected: (int index) async {
-              switch (index) {
-                case 0:
-                  DiscoveryRoute().go(context);
-                  break;
-                case 1:
-                  CreateEventRoute().go(context);
-                  break;
-                case 2:
-                  await context.read<LoginInfo>().signOut();
-
-                  if (!context.mounted) return;
-                  context.go("/");
-                  break;
-              }
-            },
+      body: child,
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Discovery',
+            tooltip: 'Discover page',
           ),
-          Expanded(child: child),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'Creator',
+            tooltip: 'Create event',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Saved',
+            tooltip: 'User page',
+          ),
         ],
+        currentIndex: selectedIndex,
+        onTap: (int index) async {
+          switch (index) {
+            case 0:
+              DiscoveryRoute().go(context);
+              break;
+            case 1:
+              CreateEventRoute().go(context);
+              break;
+            case 2:
+              UserEventRoute().go(context);
+              break;
+            case 3:
+              await context.read<LoginInfo>().signOut();
+
+              if (!context.mounted) return;
+              context.go("/");
+              break;
+          }
+        },
       ),
     );
   }

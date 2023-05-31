@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../home_page.dart';
 import '../page/discover_page/discover_page.dart';
+import '../page/user_page/user_page.dart';
 import '../services/auth_service.dart';
 
 part 'app_router.g.dart';
@@ -22,9 +23,13 @@ part 'app_router.g.dart';
       ),
       TypedGoRoute<CreateEventRoute>(
         path: '/create-event',
+      ),
+      TypedGoRoute<UserEventRoute>(
+        path: '/user-event',
       )
     ]
 )
+
 class BottomBarShellRoute extends ShellRouteData {
   const BottomBarShellRoute();
 
@@ -37,9 +42,9 @@ class BottomBarShellRoute extends ShellRouteData {
 @immutable
 class HomeRoute extends GoRouteData {
   @override
-  String? redirect(BuildContext context, GoRouterState state) => DiscoveryRoute().location;
+  String? redirect(BuildContext context, GoRouterState state)
+    => DiscoveryRoute().location;
 }
-
 
 @immutable
 class DiscoveryRoute extends GoRouteData {
@@ -53,8 +58,16 @@ class DiscoveryRoute extends GoRouteData {
 class CreateEventRoute extends GoRouteData {
   @override
   Widget build(BuildContext context,  GoRouterState state) {
-    //return const CreatePage();
-    return const ApiTestPage();
+    return const CreatePage();
+    //return const ApiTestPage();
+  }
+}
+
+@immutable
+class UserEventRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context,  GoRouterState state) {
+    return UserPage();
   }
 }
 
