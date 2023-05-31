@@ -68,6 +68,16 @@ class _ApiTestPage extends State<ApiTestPage> {
               child: Text("Geocoding"),
             ),
           ),
+          Center (
+            child: ElevatedButton(
+              onPressed: () async {
+                Location location = await geoc();
+
+                Api().addEvent();
+              },
+              child: Text("Add event"),
+            ),
+          )
         ],
       )
     );
