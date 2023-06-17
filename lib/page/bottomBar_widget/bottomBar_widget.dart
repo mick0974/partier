@@ -18,9 +18,9 @@ class BottomBarWidget extends StatelessWidget {
     final String location = GoRouter.of(context).location;
 
     if(location.startsWith('/discovery')) {
-      out = 1;
-    } else if(location.startsWith('/create-event')) {
       out = 0;
+    } else if(location.startsWith('/create-event')) {
+      out = 1;
     } else if(location.startsWith('/user-event')) {
       out = 2;
     } else {
