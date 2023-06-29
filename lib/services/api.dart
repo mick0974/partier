@@ -15,7 +15,7 @@ class Api {
   /// Adds an event to the database.
   /// Requires as input: the event's name, the event's description, the event's
   /// date and the event's place.
-  Future<void> addEvent(String name, String description, DateTime date,
+  Future<void> addEvent(String name, String dressCode, String description, DateTime date,
       GeoPoint place) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -33,6 +33,7 @@ class Api {
 
     final event = <String, dynamic>{
       "name_event": name,
+      "dress_code": dressCode,
       "description": description,
       "owner": auth.currentUser!.uid.toString(),
       "creation_date": DateTime.now(),
@@ -44,7 +45,6 @@ class Api {
     print(event);
 
     await db.collection("events").add(event);
-    print(db.collection("events").add(event));
   }
 
   Future<void> printTest() async {

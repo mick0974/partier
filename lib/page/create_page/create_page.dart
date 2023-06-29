@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:partier/services/api.dart';
 
-
 /// Create page of the application.
 /// This page will allow a user to fill all the needed fields in order to create
 /// a new event. The fields will be checked against already present events in
@@ -32,6 +31,7 @@ class _CreatePage extends State<CreatePage> {
   String eventDescription = '';
   DateTime eventDate = DateTime.now();
   GeoPoint eventPlace = GeoPoint(0, 0);
+  String eventDress = '';
 
   var nameController = TextEditingController();
   var descrController = TextEditingController();
@@ -78,7 +78,7 @@ class _CreatePage extends State<CreatePage> {
    */
   void tryAddEvent() {
     if (_formKey.currentState!.validate()) {
-      db.addEvent(eventName, eventDescription, eventDate, eventPlace);
+      db.addEvent(eventName, eventDress, eventDescription, eventDate, eventPlace);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Added a party!')),
@@ -120,6 +120,22 @@ class _CreatePage extends State<CreatePage> {
                         error = 'Empty field not allowed.';
                       } else {
                         eventName = value;
+                      }
+
+                      return error;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: "Event's Dress code",
+                    ),
+                    validator: (String? value) {
+                      String? error;
+
+                      if (value == null || value.isEmpty) {
+                        error = 'Empty field not allowed.';
+                      } else {
+                        eventDress = value;
                       }
 
                       return error;
