@@ -1,6 +1,12 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../event_widget/container/my_fancy_container.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:partier/services/api.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 /// Home page of the application.
@@ -15,11 +21,62 @@ class DiscoverPage extends StatefulWidget {
   State<DiscoverPage> createState() => _DiscoverPage();
 }
 
-
 class _DiscoverPage extends State<DiscoverPage> {
 
-  List<int> top = <int>[];
-  List<int> bottom = <int>[0,1];
+  List events = [];
+  List<Widget> event_containers = [];
+  bool first_update = true;
+  int counter = 0;
+
+  void create_events_containers(List ev) {
+    this.event_containers = [];
+    for (var i = 0; i < min(ev.length,3); i++){
+      var tmp = ev[i].values.toList()[0];
+      var date = DateTime.fromMillisecondsSinceEpoch(tmp["event_date"].seconds * 1000);
+      this.event_containers.add(
+        Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height*0.25,
+            child: MyFancyContainer(
+              title: tmp["name_event"],
+              date: "${date.day}-${date.month}-${date.year}",
+              subtitle: tmp["description"],
+            )
+        )
+      );
+    }
+  }
+
+  void update_events_list({bool reset = true}) {
+    this.counter++;
+    if (reset) {
+      this.counter = 0;
+    }
+    if (counter >= 2){
+      this.first_update = false;
+    }else{
+      this.first_update = true;
+    }
+    List tmp = [];
+    FirebaseFirestore.instance.collection("events").where("public",
+        isEqualTo: true).where("event_date", isGreaterThan: DateTime.now()).get().then(
+          (querySnapshot) {
+            print("Successfully completed");
+            this.events = [];
+            for (var docSnapshot in querySnapshot.docs) {
+              setState(() {
+                this.events.add({docSnapshot.id: docSnapshot.data()});
+              });
+            }
+          },
+        onError: (e) => print("Error completing: $e"),
+        );
+    create_events_containers(this.events);
+    print(event_containers.length);
+    }
+
+
 
   Widget banner = CarouselSlider(
     options: CarouselOptions(
@@ -53,34 +110,12 @@ class _DiscoverPage extends State<DiscoverPage> {
 
   @override
   Widget build(BuildContext context) {
+    // update_events_list();
+    if (this.first_update){
+    update_events_list(reset: false);}
     const Key centerKey = ValueKey<String>('bottom-sliver-list');
+    print("Siamo nell'override ${this.events.length}");
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Events'),
-      //   centerTitle: true,
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.add),
-      //     onPressed: () {
-      //       setState(() {
-      //         bottom.add(bottom.length);
-      //       });
-      //     },
-      //   ),
-      //   actions: <Widget>[
-      //     IconButton(
-      //       icon: Icon(
-      //         Icons.remove,
-      //         color: Colors.white,
-      //       ),
-      //       onPressed: () {
-      //         setState(() {
-      //           bottom.remove(bottom.length - 1);
-      //         });
-      //         // do something
-      //       },
-      //     )
-      //   ],
-      // ),
       appBar: AppBar(
         backgroundColor: Colors.white24,
         toolbarHeight: 180,
@@ -94,7 +129,7 @@ class _DiscoverPage extends State<DiscoverPage> {
           SliverAppBar(
             flexibleSpace: SafeArea(
               child: FilledButton.icon(
-                onPressed: () {},
+                onPressed: update_events_list,
                 icon: Icon(Icons.update),
                 label: Text('Tap to reload'),
               )
@@ -103,23 +138,12 @@ class _DiscoverPage extends State<DiscoverPage> {
 
           SliverList(
             key: centerKey,
-            delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                return Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height*0.25,
-                  child: MyFancyContainer(
-                        title: 'Festival di SanRemo!',
-                        color1: Colors.lightGreenAccent,
-                        color2: Colors.lightBlue,
-                        subtitle: "Partecipa all'evento della musica Italiana",
-                        )
-                );
-              },
-              childCount: bottom.length,
+            delegate: SliverChildListDelegate(
+                event_containers,
+                ),
+
             ),
-          ),
+
           // SliverPadding(padding: EdgeInsets.all(5))
         ],
       ),

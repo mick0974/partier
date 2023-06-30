@@ -73,7 +73,7 @@ class _ApiTestPage extends State<ApiTestPage> {
               onPressed: () async {
                 Location location = await geoc();
 
-                Api().addEvent();
+                //Api().addEvent();
               },
               child: Text("Add event"),
             ),

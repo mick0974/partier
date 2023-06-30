@@ -17,6 +17,8 @@ class MyFancyContainer extends StatefulWidget {
     this.padding,
     this.titleStyle,
     this.subtitleStyle,
+    this.image_path,
+    required this.date,
   }) : super(key: key);
 
   final double? width;
@@ -31,6 +33,8 @@ class MyFancyContainer extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
+  final String? image_path;
+  final String date;
 
   @override
   _MyFancyContainerState createState() => _MyFancyContainerState();
@@ -46,8 +50,8 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           gradient: LinearGradient(colors: [
-            widget.color1 ?? const Color(0xFFCB1841),
-            widget.color2 ?? const Color(0xFF2604DE)
+            widget.color1 ?? Colors.lightGreenAccent,
+            widget.color2 ?? Colors.lightBlue
           ], begin: Alignment.topLeft, end: Alignment.bottomRight),
           boxShadow: const [
             BoxShadow(
@@ -80,7 +84,7 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(20.0),
                    topRight: Radius.circular(20)),
                    image: DecorationImage(
-                     image: AssetImage('assets/images/sanremo.jpg'),
+                     image: AssetImage(widget.image_path ?? 'assets/images/sanremo.jpg'),
                      opacity: 0.5,
                      fit: BoxFit.fitWidth,
                    ),
@@ -106,12 +110,23 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
                                Padding(
                                  padding: const EdgeInsets.all(5.0),
                                  child: Text(
-                                   widget.title + '                       ',
+                                   widget.title + '       ',
                                    style: widget.titleStyle ??
                                        TextStyle(
                                          color: widget.textColor,
                                          fontSize: 20.0,
                                          fontWeight: FontWeight.bold,
+                                       ),
+                                 ),
+                               ),
+                               Padding(
+                                 padding: const EdgeInsets.all(5.0),
+                                 child: Text(
+                                   widget.date,
+                                   style: widget.titleStyle ??
+                                       TextStyle(
+                                         color: widget.textColor,
+                                         fontSize: 15.0,
                                        ),
                                  ),
                                ),

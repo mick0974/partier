@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 
 /// Defines the HomePage's layout and behaviour.
 /// Every HomePage be Scaffold and will have:
-/// * An AppBar containing title and IconButton (this last reidirecting to a
+/// * An AppBar containing title and IconButton (this last redirecting to a
 /// UserAccount widget);
 /// * An instance of Page widget managing whether a DiscoverPage widget or a
 /// UserPage widget should be displayed.
