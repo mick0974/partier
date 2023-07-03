@@ -28,6 +28,8 @@ class _DiscoverPage extends State<DiscoverPage> {
   bool first_update = true;
   int counter = 0;
 
+
+
   void create_events_containers(List ev) {
     this.event_containers = [];
     for (var i = 0; i < min(ev.length,3); i++){
@@ -73,7 +75,7 @@ class _DiscoverPage extends State<DiscoverPage> {
         onError: (e) => print("Error completing: $e"),
         );
     create_events_containers(this.events);
-    print(event_containers.length);
+    print(" stampando la lunghezza dei container ${this.event_containers.length}");
     }
 
 
@@ -110,7 +112,6 @@ class _DiscoverPage extends State<DiscoverPage> {
 
   @override
   Widget build(BuildContext context) {
-    // update_events_list();
     if (this.first_update){
     update_events_list(reset: false);}
     const Key centerKey = ValueKey<String>('bottom-sliver-list');
