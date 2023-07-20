@@ -72,7 +72,7 @@ class Api {
     //            = db.collection("events").where(
     //                firebase.firestore.FieldPath.documentId(), '==', eventId
     //              ).get();
-    String? userName = GoogleSignIn().currentUser?.displayName;
+    String? userName = await GoogleSignIn().currentUser?.displayName;
     userName ??= 'Failed to get displayName';
 
     db.collection('events').doc(eventId).collection('guests').add({

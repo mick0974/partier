@@ -1,6 +1,8 @@
-import 'package:fancy_containers/src/utils/fancy_containers_typedef.dart';
 import 'package:flutter/material.dart';
+
+import 'package:fancy_containers/src/utils/fancy_containers_typedef.dart';
 import '../myPoll.dart';
+import '../../../services/api.dart';
 
 
 class MyFancyContainer extends StatefulWidget {
@@ -11,6 +13,7 @@ class MyFancyContainer extends StatefulWidget {
     this.width,
     this.color1,
     this.color2,
+    required this.id,
     required this.title,
     this.textColor,
     this.subtitle,
@@ -27,6 +30,7 @@ class MyFancyContainer extends StatefulWidget {
   final double? height;
   final Color? color1;
   final Color? color2;
+  final String id;
   final String title;
   final Color? textColor;
   final String? subtitle;
@@ -229,7 +233,6 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -328,7 +331,10 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
                                ),
                                Expanded(
                                  child: IconButton(
-                                   onPressed: () {},
+                                   onPressed: () {
+                                     String eventId = widget.id;
+                                     Api().addUser(eventId);
+                                   },
                                    icon: const Icon(Icons.add),
                                    // iconSize: 5,
                                  ),
@@ -336,19 +342,21 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
                              ],
                            ),
 
+                           /*
                            widget.subtitle != null
                                ? Padding(
-                             padding: const EdgeInsets.all(2.0),
-                             child: Text(
-                               widget.subtitle ?? "",
-                               style: widget.subtitleStyle ??
-                                   TextStyle(
-                                     color: widget.subtitleColor,
-                                     fontSize: 15.0,
-                                   ),
-                             ),
-                           )
+                                   padding: const EdgeInsets.all(2.0),
+                                   child: Text(
+                                    widget.subtitle ?? "",
+                                    style: widget.subtitleStyle ??
+                                     TextStyle(
+                                       color: widget.subtitleColor,
+                                       fontSize: 15.0,
+                                     ),
+                                  ),
+                                 )
                                : Container(),
+                            */
 
                          ],
                        // backgroundColor: Colors.white,

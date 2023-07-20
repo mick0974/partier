@@ -31,19 +31,21 @@ class _DiscoverPage extends State<DiscoverPage> {
 
 
   void create_events_containers(List ev) {
-    this.event_containers = [];
+    event_containers = [];
     for (var i = 0; i < min(ev.length,3); i++){
+      var tmpId = ev[i].keys.toList()[0];
       var tmp = ev[i].values.toList()[0];
       var date = DateTime.fromMillisecondsSinceEpoch(tmp["event_date"].seconds * 1000);
-      this.event_containers.add(
+
+      event_containers.add(
         Container(
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height*0.25,
             child: MyFancyContainer(
+              id: tmpId,
               title: tmp["name_event"],
               date: "${date.day}-${date.month}-${date.year}",
-              subtitle: tmp["description"],
             )
         )
       );
