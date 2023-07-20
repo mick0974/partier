@@ -306,7 +306,7 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
                                Padding(
                                  padding: const EdgeInsets.all(5.0),
                                  child: Text(
-                                   widget.title + '       ',
+                                   widget.title,
                                    style: widget.titleStyle ??
                                        TextStyle(
                                          color: widget.textColor,
@@ -326,9 +326,13 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
                                        ),
                                  ),
                                ),
-                               IconButton(onPressed: () {}, icon: Icon(Icons.add),
+                               Expanded(
+                                 child: IconButton(
+                                   onPressed: () {},
+                                   icon: const Icon(Icons.add),
                                    // iconSize: 5,
-                                   )
+                                 ),
+                               )
                              ],
                            ),
 
