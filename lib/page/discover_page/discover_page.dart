@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:partier/services/auth_service.dart';
 import '../event_widget/container/my_fancy_container.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -78,7 +79,16 @@ class _DiscoverPage extends State<DiscoverPage> {
         );
     create_events_containers(this.events);
     print(" stampando la lunghezza dei container ${this.event_containers.length}");
+
+    var api = Api();
+    var loginInfo = LoginInfo();
+    print("loggedIn: " + loginInfo.checkIfLoggedIn().toString());
+    print("USER ID: " + loginInfo.userId!);
+
+    if(loginInfo.userId != null) {
+      api.getCreatedEvents(loginInfo.userId!);
     }
+  }
 
 
 

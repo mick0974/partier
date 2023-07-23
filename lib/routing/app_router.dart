@@ -58,7 +58,7 @@ class DiscoveryRoute extends GoRouteData {
 class CreateEventRoute extends GoRouteData {
   @override
   Widget build(BuildContext context,  GoRouterState state) {
-    return const CreatePage();
+    return CreatePage();
     //return const ApiTestPage();
   }
 }
@@ -81,7 +81,7 @@ class EventDetailRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context,  GoRouterState state) {
-    return const CreatePage();
+    return CreatePage();
   }
 }
 
