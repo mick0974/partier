@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Api {
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -52,6 +53,31 @@ class Api {
       for (var doc in event.docs) {
         print("${doc.id} => ${doc.data()}");
       }
+    });
+  }
+
+  /// Gets the id of current user and returns it as a string.
+  Future<String> getCurrentUser() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final uid = auth.currentUser!.uid;
+    print(uid);
+
+    return uid.toString();
+  }
+
+  /// Adds current user to specified event.
+  Future addUser(String eventId) async {
+    //final uid = getCurrentUser();
+    //final event = db.collection('events').doc(eventId).get();
+    //            = db.collection("events").where(
+    //                firebase.firestore.FieldPath.documentId(), '==', eventId
+    //              ).get();
+    String? userName = await GoogleSignIn().currentUser?.displayName;
+    userName ??= 'Failed to get displayName';
+
+    db.collection('events').doc(eventId).collection('guests').add({
+      'id': await getCurrentUser(),
+      'name': userName,
     });
   }
 }
