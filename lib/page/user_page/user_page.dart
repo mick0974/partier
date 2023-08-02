@@ -1,19 +1,18 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:event/event.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../event_widget/container/my_fancy_container.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import '../../services/api.dart';
 import '../event_widget/container/my_container.dart';
 
 
 /// Page displaying the summary of the events to which a user is subscribed as
 /// both host and guest.
 class UserPage extends StatefulWidget {
-	Map events = LinkedHashMap<DateTime, List<Event<EventArgs>>>();
-	
 	UserPage({super.key});
 
 	@override
@@ -21,58 +20,33 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-	var _calendarFormat = CalendarFormat.month;
+	final _calendarFormat = CalendarFormat.month;
 	var _selectedDay = DateTime.now();
 	var _focusedDay = DateTime.now();
 
-	/*
-	void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-		if (!isSameDay(_selectedDay, selectedDay)) {
-		setState(() {
-		_focusedDay = focusedDay;
-		_selectedDay = selectedDay;
-		_selectedEvents = _getEventsForDay(selectedDay);
-		});
-		}
-	}
-	*/
+	FirebaseFirestore db = FirebaseFirestore.instance;
+	Map events = <DateTime, Map<String, dynamic>>{};
+	List _selectedEvents = [];
 
 
 	Widget banner = CarouselSlider(
 		options: CarouselOptions(
 			aspectRatio: 16/9,
 			enableInfiniteScroll: false,
-			autoPlay: false,
-			autoPlayInterval: Duration(seconds: 2),
-			autoPlayAnimationDuration: Duration(milliseconds: 800),
-			autoPlayCurve: Curves.fastOutSlowIn,
 			enlargeCenterPage: false,
-			enlargeFactor: 0.0,
 			scrollDirection: Axis.horizontal,
 		),
-		items: [MyContainer(
+		items: [const MyContainer(
 						title: 'Festival di SanRemo!',
 						subtitle: "Partecipa all'evento della musica Italiana",
-						space_for_button: ''
-						),
-						MyContainer(
-								title: 'Fake News!',
-								subtitle: "La Band più attesa negli stadi",
-								space_for_button: '',
-								image_path: 'assets/images/pinguini.jpg',
-						),
-						MyContainer(
-							title: 'Will of the People!',
-							subtitle: "L'evento di Rock Alternativo dell'anno!",
-							space_for_button: '',
-							image_path: 'assets/images/muse.png',
-						)].map((i) {
+						date: '16/09/2023',
+						),].map((i) {
 			return Builder(
 				builder: (BuildContext context) {
 					return Container(
 						// width: MediaQuery.of(context).size.width,
-							margin: EdgeInsets.symmetric(horizontal: 5.0),
-							decoration: BoxDecoration(
+							margin: const EdgeInsets.symmetric(horizontal: 5.0),
+							decoration: const BoxDecoration(
 									color: Colors.white24
 							),
 							child: i,
@@ -83,8 +57,34 @@ class _UserPageState extends State<UserPage> {
 	);
 
 	/// Returns the (eventually empty) list of events of a given day.
-	List<Event> _getEventsForDay(UserPage widget, DateTime day) {
-		return widget.events[day] ?? [];
+	List _getEventsForDay(DateTime day) {
+		db.collection('events')
+			.where('event_date', isEqualTo: day)
+			//.where('guests.id', isEqualTo: Api().getCurrentUser())
+			.get().then(
+				(querySnapshot) {
+					print("[getEventsForDay] ${querySnapshot.docs}");
+					Map<String, dynamic> data;
+
+					for (var docSnapshot in querySnapshot.docs) {
+						data = docSnapshot.data();
+						events[data['event_date']] = data;
+					}
+				},
+			onError: (e) => print("Error completing: $e"),
+		);
+
+		return events[day] ?? [];
+	}
+
+	void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+		if (!isSameDay(_selectedDay, selectedDay)) {
+			setState(() {
+				_focusedDay = focusedDay;
+				_selectedDay = selectedDay;
+				_selectedEvents = _getEventsForDay(selectedDay);
+			});
+		}
 	}
 
 	@override
@@ -100,37 +100,28 @@ class _UserPageState extends State<UserPage> {
 					selectedDayPredicate: (day) {
 						return isSameDay(_selectedDay, day);
 					},
-					onDaySelected: (selectedDay, focusedDay) {
-						setState(() {
-							_selectedDay = selectedDay;
-							_focusedDay = focusedDay;
-						});
-					},
+					onDaySelected: _onDaySelected,
 					onPageChanged: (focusedDay) {
 						_focusedDay = focusedDay;
 					},
 					eventLoader: (day) {
-						return _getEventsForDay(widget, day);
+						return _getEventsForDay(day);
 					},
-
 				),
-				Container(
-					height: 50,
-					color: Colors.amber[500],
-					child: const Center(child: Text('Host Events')),
+				const Padding(
+				  padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+				  child: Text(
+				  	'Host Events',
+				  	style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+				  ),
 				),
-				Container(
-					height: 50,
-					color: Colors.amber[100],
-					child: const Center(child: Text('Guest Events')),
-				),
-				Container(
-					height: 15,
-				),
-				Text('My Events', style: TextStyle(fontWeight: FontWeight.bold,
-				fontSize: 20),),
-				Container(
-					height: 15,
+				banner,
+				const Padding(
+					padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+					child: Text(
+						'Guest Events',
+						style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+					),
 				),
 				banner,
 			],

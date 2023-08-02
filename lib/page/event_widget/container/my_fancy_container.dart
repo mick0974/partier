@@ -75,7 +75,7 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
           builder: (BuildContext context) => _buildEventDialog(context),
         );
       },
-    child: Container(
+      child: Container(
         alignment: Alignment.center,
         width: widget.width ?? MediaQuery.of(context).size.width*0.95,
         height: widget.height ?? MediaQuery.of(context).size.height*0.2,
@@ -97,13 +97,13 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width*0.9,
           height: MediaQuery.of(context).size.height*0.17,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-            boxShadow: const [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 5,
-            ),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 5,
+              ),
             ],
           ),
           child: Column(
@@ -128,9 +128,9 @@ class _MyFancyContainerState extends State<MyFancyContainer> {
                // alignment: Alignment.center,
                // width: MediaQuery.of(context).size.width,
                // height: MediaQuery.of(context).size.height*0.09,
-               decoration: BoxDecoration(
+               decoration: const BoxDecoration(
                  color: Colors.white24,
-                 borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20.0),
+                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0),
                      bottomRight: Radius.circular(20)),
                ),
                child: Column(
