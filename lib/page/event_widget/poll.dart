@@ -43,6 +43,10 @@ class Poll extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(32.0))
+      ),
+      contentPadding: const EdgeInsets.only(top: 15.0,),
       children: <Widget>[
         Container(
           height: MediaQuery.of(context).size.height,

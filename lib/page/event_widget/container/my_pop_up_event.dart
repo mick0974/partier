@@ -29,6 +29,7 @@ class _MyPopupEventState extends State<MyPopupEvent>{
   bool option_3 = false;
   bool option_4 = false;
 
+
   Widget _buildPoll(BuildContext context) {
 
     return Poll(
@@ -36,204 +37,200 @@ class _MyPopupEventState extends State<MyPopupEvent>{
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-      child: FractionallySizedBox(
-        child: AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(32.0))
-          ),
-          contentPadding: const EdgeInsets.only(top: 15.0,),
-          content: Container(
-          //child: Container(
-            width: MediaQuery.of(context).size.height*0.75,
-            height: MediaQuery.of(context).size.height*0.65,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      widget.title,
-                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-
-                    ),
-                    Text(widget.date)
-                  ],
-                ),
-                SizedBox(
-                  height: 18.0,
-                ),
-                Divider(
-                  color: Colors.grey,
-                  height: 4.0,
-                ),
-                Container(
-                  // alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width*0.805,
-                  height: MediaQuery.of(context).size.height*0.09,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(widget.image_path ?? 'assets/images/sanremo.jpg'),
-                      opacity: 0.5,
-                      fit: BoxFit.cover,
-                    ),
+      child: DraggableScrollableSheet(
+        snap: true,
+        builder: (BuildContext context, ScrollController scrollController) {
+          return DefaultTabController(
+            initialIndex: 0,
+            length: 2,
+            child: Scaffold(
+              backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              appBar: AppBar(
+                title: Text(
+                  widget.title,
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold
                   ),
                 ),
-
-                Divider(
-                  color: Colors.grey,
-                  height: 4.0,
+                bottom: const TabBar(
+                  tabs: <Widget>[
+                    Tab(
+                      icon: Icon(Icons.cloud_outlined),
+                      text: 'Summary',
+                    ),
+                    Tab(
+                      icon: Icon(Icons.beach_access_sharp),
+                      text: 'Participants',
+                    ),
+                  ],
                 ),
-                Container(
-                  height: 10,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20.0, right: 20.0,
-                      top: 5.0, bottom: 20.0),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "Descrizione:",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold,),
-                      ),
-                      Text(
-                        widget.subtitle ?? "Un magnifico evento!",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 15.0,),
+              ),
+              body: TabBarView(
+                children: <Widget>[
+                  ListView(
+                    //shrinkWrap: true,
+                    controller: scrollController,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                const Text(
+                                  'Time left:',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(widget.date),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 18.0,),
+                          const Divider(
+                            color: Colors.grey,
+                            height: 4.0,
+                          ),
+                          Container(
+                            // alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width*0.805,
+                            height: MediaQuery.of(context).size.height*0.09,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(widget.image_path ?? 'assets/images/sanremo.jpg'),
+                                opacity: 0.5,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const Divider(
+                            color: Colors.grey,
+                            height: 4.0,
+                          ),
+                          const SizedBox(height: 10,),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20.0, right: 20.0,
+                                top: 5.0, bottom: 20.0),
+                            child: Column(
+                              children: <Widget>[
+                                const Text(
+                                  "Descrizione:",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold,),
+                                ),
+                                Text(
+                                  widget.subtitle ?? "Un magnifico evento!",
+                                  textAlign: TextAlign.start,
+                                  style: const TextStyle(fontSize: 15.0,),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Divider(
+                            color: Colors.grey,
+                            height: 5.0,
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                margin: const EdgeInsets.only(left: 20.0, right: 20.0,
+                                    top: 5.0, bottom: 10.0),
+                                child: const Text("Sondaggio"),
+                              ),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  textStyle: const TextStyle(fontSize: 20),
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) => _buildPoll(context),
+                                  );
+                                },
+                                child: const Text('Drinks'),
+                              ),
+                            ],
+                          ),
+                          const Divider(
+                            color: Colors.grey,
+                            height: 5.0,
+                          ),
+                          /*
+                          Column(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(left: 20.0, right: 20.0,
+                                    top: 5.0, bottom: 10.0),
+                                child: const Text("Partecipanti"),
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: GridView.count(
+                              // Create a grid with 2 columns. If you change the scrollDirection to
+                              // horizontal, this would produce 2 rows.
+                              crossAxisCount: 3,
+                              // Generate 100 Widgets that display their index in the List
+                              children: List.generate(9, (index) {
+                                return Center(
+                                  child: Text(
+                                    'Utente $index',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
+                          InkWell(
+                            child: GestureDetector(
+                              onTap: () {print("Il listener funziona!");},
+                              child: Container(
+                                padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                                decoration: const BoxDecoration(
+                                  color: Colors.teal,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(32.0),
+                                      bottomRight: Radius.circular(32.0)),
+                                ),
+                                child: const Text(
+                                  'Iscriviti!',
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontWeight: FontWeight.bold,
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                          */
+                        ],
                       ),
                     ],
                   ),
-                ),
-                Divider(
-                  color: Colors.grey,
-                  height: 5.0,
-                ),
-                Expanded(child: SingleChildScrollView(
-                    child:Column(
-                      children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.only(left: 20.0, right: 20.0,
-                              top: 5.0, bottom: 10.0),
-                          child: Text("Sondaggio"),
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            textStyle: const TextStyle(fontSize: 20),
-                          ),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => _buildPoll(context),
-                            );
-                          },
-                          child: const Text('Drinks'),
-                        ),
-                        MyPoll(
-                          label: 'Jack & Cola',
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          value: this.option_1,
-                          onChanged: (bool newValue) {
-                            setState(() {
-                              this.option_1 = newValue;
-                              print(this.option_1);
-                            });
-                          },
-                        ),
-                        MyPoll(
-                          label: 'Gin Lemon',
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          value: this.option_2,
-                          onChanged: (bool newValue) {
-                            setState(() {
-                              this.option_2 = newValue;
-                              print(this.option_2);
-                            });
-                          },
-                        ),
-                        MyPoll(
-                          label: 'Aperol Spritz',
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          value: this.option_3,
-                          onChanged: (bool newValue) {
-                            setState(() {
-                              this.option_3 = newValue;
-                              print(this.option_3);
-                            });
-                          },
-                        ),
-
-                        Divider(
-                          color: Colors.grey,
-                          height: 5.0,
-                        ),
-
-                      ],
-                    )
-
-                ),
-                ),
-
-                Column(
-                  children: [Container(
-                    margin: const EdgeInsets.only(left: 20.0, right: 20.0,
-                        top: 5.0, bottom: 10.0),
-                    child: Text("Partecipanti"),
-                  ),
-
-                  ],
-                ),
-                Expanded(
-                  child: GridView.count(
-                    // Create a grid with 2 columns. If you change the scrollDirection to
-                    // horizontal, this would produce 2 rows.
-                    crossAxisCount: 3,
-                    // Generate 100 Widgets that display their index in the List
-                    children: List.generate(9, (index) {
-                      return Center(
-                        child: Text(
-                          'Utente $index',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      );
-                    }),
-                  ),
-                ),
-
-                InkWell(
-                  child: GestureDetector(
-                    onTap: () {print("Il listener funziona!");},
-                    child: Container(
-                      child: Text(
-                        'Iscriviti!',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.bold,
-                            color: Colors.white, fontSize: 20),
+                  ListView(
+                    children: [
+                      Column(
+                        children: const [
+                          Text('Participants'),
+                        ],
                       ),
-                      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.teal,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(32.0),
-                            bottomRight: Radius.circular(32.0)),
-                      ),
-                    ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        }
       ),
     );
   }
