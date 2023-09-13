@@ -53,7 +53,7 @@ class _DiscoverPage extends State<DiscoverPage> {
     }
   }
 
-  void updateEventsList({bool reset = true}) async {
+  void updateEventsList({bool reset = true}) {
     //https://firebase.google.com/docs/firestore/query-data/get-data
     counter++;
 

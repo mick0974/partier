@@ -47,6 +47,24 @@ class Event {
     return event;
   }
 
+  /// Function which associates a snapshot from the database to a event.
+  factory Event.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final data = snapshot.data();
+
+    return Event(
+      id: data?['id'],
+      nameEvent: data?['name_event'],
+      creationDate: data?['creation_date'],
+      description: data?['description'],
+      dressCode: data?['dress_code'],
+      owner: data?['owner'],
+      place: data?['place'],
+      public: data?['public'],
+      eventDate: data?['event_date'],
+      //guests: data?['guests'] is Iterable ? List.from(data?['guests']) : null,
+    );
+  }
+
   Map toMap() {
     Map<String, dynamic> map = {
       columnNameEvent: nameEvent,
