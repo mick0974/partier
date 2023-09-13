@@ -18,7 +18,7 @@ Future<void> main() async {
 	runApp(Partier());
 }
 
-/// Generates an instance of the applicaztion having HomePage as home page
+/// Generates an instance of the application having HomePage as home page
 /*
 * To Be Done:
 * - Remove degub band;

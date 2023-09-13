@@ -86,34 +86,31 @@ class Api {
   }
 
   Future<List<Event>> getCreatedEvents(String userId) async {
-    CollectionReference ref = db.collection('events');
-    QuerySnapshot eventsQuery = await ref
-        .where("owner", isEqualTo: userId)
-        .get();
-
     HashMap<String, Event> eventsHashMap = HashMap<String, Event>();
 
-    for (var document in eventsQuery.docs)
+    CollectionReference ref = db.collection('events');
 
+    QuerySnapshot eventsQuery = await ref
+      .where("owner", isEqualTo: userId)
+      .where("public", isEqualTo: true)
+      .where("event_date", isGreaterThan: DateTime.now())
+      .get();
 
-      /*
-    for (var document in eventsQuery.docs) {
-      eventsHashMap.putIfAbsent(document.get('id'), () => Event(
-          id: document.get('id'),
-          nameEvent: document.get('name_event'),
-          creationDate: document.get('creation_date'),
-          description: document.get('description'),
-          dressCode: document.get('dress_code'),
-          owner: document.get('owner'),
-          place: document.get('place'),
-          public: document.get('public'),
-          eventDate: document.get('event_date')
-      ));
+    for (var doc in eventsQuery.docs) {
+      eventsHashMap[doc.get('id')] = Event(
+          id: doc.get('id'),
+          nameEvent: doc.get('name_event'),
+          creationDate: doc.get('creation_date'),
+          description: doc.get('description'),
+          dressCode: doc.get('dress_code'),
+          owner: doc.get('owner'),
+          place: doc.get('place'),
+          public: doc.get('public'),
+          eventDate: doc.get('event_date')
+      );
     }
 
-     */
-
-    print(eventsHashMap.values.toList());
+    print('[API] ${eventsHashMap.values.toList()}');
 
     return eventsHashMap.values.toList();
   }

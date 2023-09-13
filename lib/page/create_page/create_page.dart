@@ -126,15 +126,9 @@ class CreatePage extends StatelessWidget {
                           labelText: "Event's Dress code",
                         ),
                         validator: (String? value) {
-                          String? error;
-
-                          if (value == null || value.isEmpty) {
-                            error = 'Empty field not allowed.';
-                          } else {
+                          if (value != null && value.isNotEmpty) {
                             eventDress = value;
                           }
-
-                          return error;
                         },
                       ),
                       TextFormField(

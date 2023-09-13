@@ -6,7 +6,6 @@ import 'package:partier/page/create_page/create_page.dart';
 import 'package:partier/page/login_page/login_page.dart';
 import 'package:flutter/material.dart';
 
-import '../home_page.dart';
 import '../page/discover_page/discover_page.dart';
 import '../page/user_page/user_page.dart';
 import '../services/auth_service.dart';
