@@ -20,23 +20,16 @@ class DiscoverPage extends StatefulWidget {
 }
 
 class _DiscoverPage extends State<DiscoverPage> {
-  var api = Api();
-  var loginInfo = LoginInfo();  /// TODO: Not saving login info
+  /// TODO: Not saving login info
+  //var api = Api();
+  //var loginInfo = LoginInfo();
 
   late Future<List> events;
   List<Widget> eventContainers = [];
-  bool firstUpdate = true;
-  int counter = 0;
 
   /// What do we need reset and firstUpdate?
-  Future<List> updateEventsList({bool reset = true}) async {
+  Future<List> updateEventsList() async {
     List tmp = [];
-
-    //https://firebase.google.com/docs/firestore/query-data/get-data
-    counter++;
-
-    if(reset) counter = 0;
-    firstUpdate = !(counter > 1);
 
     CollectionReference ref = FirebaseFirestore.instance.collection('events');
 
@@ -79,7 +72,7 @@ class _DiscoverPage extends State<DiscoverPage> {
   void initState() {
     super.initState();
 
-    if(firstUpdate) events = updateEventsList(reset: false);
+    events = updateEventsList();
   }
 
   @override
@@ -95,8 +88,7 @@ class _DiscoverPage extends State<DiscoverPage> {
         future: events,
         builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
           if(snapshot.data != null) {
-            print('[Discover] ${snapshot.data}');
-            if (firstUpdate) createEventContainers(snapshot.data!);
+            createEventContainers(snapshot.data!);
           } else {
             eventContainers.add(const Text('No event available.'));
           }
