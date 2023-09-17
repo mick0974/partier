@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:partier/routing/app_router.dart';
+
 import '../event_widget/container/my_fancy_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../services/auth_service.dart';
 
 
 /// Home page of the application.
@@ -18,7 +22,8 @@ class DiscoverPage extends StatefulWidget {
 class _DiscoverPage extends State<DiscoverPage> {
   /// TODO: Not saving login info
   //var api = Api();
-  //var loginInfo = LoginInfo();
+  final logInfo = LoginInfo();
+  final String path = DiscoveryRoute().location;
 
   final Stream<QuerySnapshot> _eventsStream =
     FirebaseFirestore.instance.collection('events')
@@ -51,10 +56,26 @@ class _DiscoverPage extends State<DiscoverPage> {
   }
 
   @override
+  void dispose() {
+    _eventsStream.drain();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await logInfo.signOut();
+                LoginRoute(from: path).go(context);
+              },
+              icon: const Icon(Icons.logout),
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _eventsStream,
