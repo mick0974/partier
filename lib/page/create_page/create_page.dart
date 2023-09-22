@@ -10,9 +10,10 @@ import 'package:partier/services/api.dart';
 /// a new event. The fields will be checked against already present events in
 /// the database and eventually added to it.
 /*
-TO BE DONE
+TODO:
 - Add participants invitations;
-- Return error when it's not possible to add the event.
+- Return error when it's not possible to add the event;
+- Remove/add hour from date
  */
 class CreatePage extends StatelessWidget {
   CreatePage({super.key});

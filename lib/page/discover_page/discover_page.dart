@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:partier/routing/app_router.dart';
-
-import '../event_widget/container/my_fancy_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+
+import 'package:partier/routing/app_router.dart';
+import '../event_widget/container/my_fancy_container.dart';
 import '../../services/auth_service.dart';
 
 
@@ -20,6 +20,8 @@ class DiscoverPage extends StatefulWidget {
 }
 
 class _DiscoverPage extends State<DiscoverPage> {
+  final formatter = DateFormat('d/M/y');
+
   /// TODO: Not saving login info
   //var api = Api();
   final logInfo = LoginInfo();
@@ -35,24 +37,24 @@ class _DiscoverPage extends State<DiscoverPage> {
   /// retrieved by the stream.
   List<Widget> createEventContainers(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data!.docs.map((DocumentSnapshot doc) {
-        Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
+      Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
 
-        var date =
-          DateTime.fromMillisecondsSinceEpoch(data['event_date'].seconds * 1000);
+      DateTime date = data['event_date'].toDate();
 
-        return Container(
-            alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height*0.25,
-            child: MyFancyContainer(
-              id: doc.id,
-              title: data['name_event'],
-              date: "${date.day}-${date.month}-${date.year}",
-            )
-        );
-      })
-      .toList()
-      .cast();
+      return Container(
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height*0.25,
+        child: MyFancyContainer(
+          id: doc.id,
+          title: data['name_event'],
+          date: //"${date.day}-${date.month}-${date.year}",
+            formatter.format(date),
+        )
+      );
+    })
+    .toList()
+    .cast();
   }
 
   @override
@@ -69,11 +71,11 @@ class _DiscoverPage extends State<DiscoverPage> {
         title: Text(widget.title),
         actions: [
           IconButton(
-              onPressed: () async {
-                await logInfo.signOut();
-                LoginRoute(from: path).go(context);
-              },
-              icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await logInfo.signOut();
+              LoginRoute(from: path).go(context);
+            },
+            icon: const Icon(Icons.logout),
           ),
         ],
       ),
@@ -85,7 +87,7 @@ class _DiscoverPage extends State<DiscoverPage> {
           if (snapshot.hasError) {
             disc = const Text('Something went wrong');
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            disc = const Text("Loading");
+            disc = const CircularProgressIndicator();
           } else {
             disc = ListView(
               children: createEventContainers(snapshot),
