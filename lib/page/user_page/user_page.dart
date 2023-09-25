@@ -22,51 +22,49 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
 	//final _dateFormat = DateFormat('d/M/y');
-	final _calendarFormat = CalendarFormat.month;
+	final DateTime _firstDay = DateTime(2006);
+	final DateTime _lastDay = DateTime(2036);
+	final CalendarFormat _calendarFormat = CalendarFormat.month;
 
-	late ValueNotifier<List<Event>> _selectedEvents;
-	DateTime _focusedDay = DateTime.now();
-	DateTime? _selectedDay;
+	late DateTime _focusedDay;
+	late DateTime _selectedDay;
+	late Map<DateTime, List<Event>> _events;
 
-	// TODO: filter through participants
-	final Stream<QuerySnapshot> _eventsStream =
-		FirebaseFirestore.instance.collection('events')
-			.where("event_date", isGreaterThan: DateTime.now())
-			.snapshots();
-
-	var _events = LinkedHashMap<DateTime, List<Event>>(equals: isSameDay);
+	// TODO: Improve using shifts
+	int getHashCode(DateTime key) {
+		return key.day * 1000000 + key.month * 10000 + key.year;
+	}
 
 	// TODO: Not efficient, doesn't remove if not found, always adds
-	void addEvents(AsyncSnapshot<QuerySnapshot> snapshot) {
-		DateTime eventDate;
+	void loadEvents() async {
+		DateTime firstDay = DateTime(_focusedDay.year, _focusedDay.month, 1);
+		DateTime lastDay = DateTime(_focusedDay.year, _focusedDay.month + 1, 0);
+
 		Event event;
+		DateTime eventDate;
 
-		// Retrieving data from Firestore
-		List<Event> tmp = snapshot.data!.docs.map((DocumentSnapshot doc) {
-			Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
+		_events = {};
 
-			return Event(
-				id: doc.id,
-				nameEvent: data['name_event'],
-				eventDate: data['event_date'].toDate(),
-				owner: data['owner'],
-			);
-		})
-		.toList()
-		.cast();
+		var snap = await FirebaseFirestore.instance
+			.collection('events')
+			.where('date', isGreaterThanOrEqualTo: firstDay)
+			.where('date', isLessThanOrEqualTo: lastDay)
+			.withConverter(
+				fromFirestore: Event.fromFirestore,
+				toFirestore: (event, options) => event.toFirestore())
+			.get();
 
-		// Filling _events
-		for(event in tmp) {
+		print('[loadEvents] isEmpty: ${snap.docs.isEmpty}');
+
+		for (var doc in snap.docs) {
+			event = doc.data();
 			eventDate = event.eventDate;
 
-			if(_events[eventDate] == null) {
-				_events[eventDate] = [event];
-			} else {
-				_events[eventDate]!.add(event);
-			}
-		}
+			if (_events[eventDate] == null)	_events[eventDate] = [];
+			_events[eventDate]!.add(event);
 
-		print('[addEvents] events: ${_events.keys}');
+			print('[loadEvents] _events: $_events');
+		}
 	}
 
 	/*
@@ -77,24 +75,7 @@ class _UserPageState extends State<UserPage> {
 			enlargeCenterPage: false,
 			scrollDirection: Axis.horizontal,
 		),
-		items: [const MyContainer(
-						title: 'Festival di SanRemo!',
-						subtitle: "Partecipa all'evento della musica Italiana",
-						date: '16/09/2023',
-						),].map((i) {
-			return Builder(
-				builder: (BuildContext context) {
-					return Container(
-						// width: MediaQuery.of(context).size.width,
-							margin: const EdgeInsets.symmetric(horizontal: 5.0),
-							decoration: const BoxDecoration(
-									color: Colors.white24
-							),
-							child: i,
-					);
-				},
-			);
-		}).toList(),
+		items: ,
 	);
 	 */
 
@@ -104,82 +85,56 @@ class _UserPageState extends State<UserPage> {
 	}
 
 	void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+		print('[onDaySelected] $selectedDay: ${_events[selectedDay]}');
+
 		if (!isSameDay(_selectedDay, selectedDay)) {
 			setState(() {
 				_focusedDay = focusedDay;
 				_selectedDay = selectedDay;
 			});
-
-			_selectedEvents.value = _getEventsForDay(selectedDay);
 		}
+	}
+
+	void _onPageChanged(focusedDay) {
+		setState(() {
+			_focusedDay = focusedDay;
+			loadEvents();
+		});
 	}
 
 	@override
 	void initState() {
 		super.initState();
 
+		_focusedDay = DateTime.now();
 		_selectedDay = _focusedDay;
-		_selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
-	}
 
-	@override
-	void dispose() {
-		_selectedEvents.dispose();
+		_events = LinkedHashMap(
+				equals: isSameDay,
+				hashCode: getHashCode,
+			);
 
-		super.dispose();
+		loadEvents();
 	}
 
 	@override
 	Widget build(BuildContext context) {
-		return StreamBuilder<QuerySnapshot>(
-			stream: _eventsStream,
-			builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-				Widget disc;
-
-				if (snapshot.hasError) {
-					disc = const Text('Something went wrong');
-				} else if (snapshot.connectionState == ConnectionState.waiting) {
-					disc = const Text("Loading");
-				} else {
-					addEvents(snapshot);
-
-					disc = ListView(
-						padding: const EdgeInsets.all(8),
-						children: <Widget>[
-							TableCalendar(
-								firstDay: DateTime(2006),
-								lastDay: DateTime(2036),
-								focusedDay: _focusedDay,
-								selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-								calendarFormat: _calendarFormat,
-								eventLoader: _getEventsForDay,
-								onDaySelected: _onDaySelected,
-								onPageChanged: (focusedDay) {
-									_focusedDay = focusedDay;
-								},
-							),
-							const Padding(
-								padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-								child: Text(
-									'Host Events',
-									style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-								),
-							),
-							//banner,
-							const Padding(
-								padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-								child: Text(
-									'Guest Events',
-									style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-								),
-							),
-							//banner,
-						],
-					);
-				}
-
-				return disc;
-			}
-		);
+		return 
+			Scaffold(
+				appBar: AppBar(),
+			  body: SingleChildScrollView(
+					padding: const EdgeInsets.all(8),
+					child: TableCalendar(
+						firstDay: _firstDay,
+						lastDay: _lastDay,
+						focusedDay: _focusedDay,
+						selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+						calendarFormat: _calendarFormat,
+						eventLoader: _getEventsForDay,
+						onDaySelected: _onDaySelected,
+						onPageChanged: _onPageChanged,
+					),
+			  ),
+			);
 	}
 }
